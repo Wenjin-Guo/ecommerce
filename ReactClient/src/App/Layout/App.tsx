@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
+import { Product } from "../Models/Product";
+import Catalog from "../../Features/Catalog/Catalog";
 
 
 function App() {
 
-  const[products, setProduct] = useState([
-    {name:'product1', price:100},
-    {name:'product2', price:200}
-  ]);
+  const[products, setProduct] = useState<Product[]>([]);
 
   useEffect(()=>{
     fetch('http://localhost:5000/api/products')
@@ -16,18 +15,20 @@ function App() {
 
   function addProduct(){
     setProduct([...products,
-      {name:'product'+(products.length+1),price:(products.length+1)*100}])
+      { 
+        id:products.length+101,
+        name:'product'+(products.length+1),
+        price:(products.length+1)*100,
+        brand:'some brand'
+      }])
   }
 
   return (
     
     <div className="app">
       <h1 style={{color:'blue'}}>ecommerce</h1>
-      <ul>
-          {products.map((item,index)=>
-            (<li key={index}>{item.name} - {item.price}</li>))}
-      </ul>
-      <button onClick={addProduct}>Add Product</button>
+      <Catalog products={products} addProduct={addProduct} />
+      
     </div>
       
    
