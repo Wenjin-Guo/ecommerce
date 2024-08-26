@@ -14,7 +14,7 @@ export default function ProductList({products}:Props){
         <Grid container spacing={4}>
             {products.map(item=>
             (
-                <Grid item xs={4}>
+                <Grid item xs>
                     <ProductCard item={item} />
                 </ Grid>
 

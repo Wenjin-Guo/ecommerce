@@ -1,4 +1,4 @@
-import {  Button, Card, CardActions, CardContent, CardMedia,  Typography } from "@mui/material";
+import {  Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia,  Typography } from "@mui/material";
 import { Product } from "../../App/Models/Product";
 
 interface Props{
@@ -8,23 +8,33 @@ interface Props{
 export default function ProductCard({item}:Props){
     return(
         <Card >
+            <CardHeader
+                avatar={
+                    <Avatar sx={{bgcolor:'secondary.main'}}>
+                        {item.name.charAt(0).toUpperCase()}
+                    </Avatar>
+                }
+                title = {item.name}
+                titleTypographyProps={{
+                    sx:{fontweight:'bold', color:'primary.main'}
+                }}
+            />
             <CardMedia
-                sx={{ height: 140 }}
-                image="http://picsum.photos/300"
-                title="green iguana"
+                sx={{ height: 140, backgroundSize:'contain' }}
+                image= {item.pictureUrl}
+                title= {item.name}
             />
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                    Lizard
+                <Typography gutterBottom variant="h6" component="div">
+                    ${(item.price/100).toFixed(2)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with over 6,000
-                    species, ranging across all continents except Antarctica
+                    {item.brand} / {item.type}
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
+                <Button variant="contained" size="small">Add to cart</Button>
+                <Button variant="contained" size="small">View</Button>
             </CardActions>
         </Card>
     )
