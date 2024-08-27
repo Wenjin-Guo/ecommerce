@@ -1,13 +1,23 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Switch, Toolbar, Typography } from "@mui/material";
 
-export default function Header(){
+interface Props{
+    setViewMode:()=>void;
+}
+
+function Header({setViewMode}:Props){
+
+    
+
     return(
         <AppBar position="static" sx={{mb:4}}>
             <Toolbar>
                 <Typography variant="h5">
                     Ecommerce
                 </Typography>
+                <Switch onClick={setViewMode}></Switch>
             </Toolbar>
         </AppBar>
     )
 }
+
+export default Header;
