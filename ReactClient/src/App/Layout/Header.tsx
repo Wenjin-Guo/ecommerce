@@ -5,9 +5,6 @@ interface Props{
 }
 
 function Header({setViewMode}:Props){
-
-    
-
     return(
         <AppBar position="static" sx={{mb:4}}>
             <Toolbar>
