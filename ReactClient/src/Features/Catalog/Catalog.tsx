@@ -1,5 +1,3 @@
-
-
 import { Product } from "../../App/Models/Product";
 import ProductList from "./ProductList";
 import { useEffect, useState } from "react";

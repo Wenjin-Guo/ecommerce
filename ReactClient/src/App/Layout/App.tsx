@@ -1,8 +1,8 @@
 
-import { useState } from "react";
-import Catalog from "../../Features/Catalog/Catalog";
+import { useCallback, useState } from "react";
 import Header from "./Header";
 import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
 
 
@@ -15,10 +15,10 @@ function App() {
     },
   });
 
-  const setViewMode =  ()=>{
-    setDarkMode(prevMode => !prevMode)
-  };
-
+  const setViewMode = useCallback(() => {
+    setDarkMode(prevMode => !prevMode);
+  }, []);
+  
   return (
     
     <ThemeProvider theme={theme}>
@@ -26,13 +26,11 @@ function App() {
       <Header setViewMode={setViewMode} />
       
       <Container>
-        <Catalog  />
+        <Outlet />
       </Container>
       
     </ThemeProvider>
-      
-   
   )
 }
 
-export default App
+export default App;

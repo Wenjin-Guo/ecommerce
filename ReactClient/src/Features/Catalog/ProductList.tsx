@@ -17,11 +17,8 @@ export default function ProductList({products}:Props){
                 <Grid item xs key={item.id}>
                     <ProductCard item={item} />
                 </ Grid>
-
-                
             ))}
         </Grid>
     </>
     )
-    
 }
