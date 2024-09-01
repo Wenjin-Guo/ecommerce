@@ -1,5 +1,6 @@
 
-import { AppBar, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
+import { ShoppingCart } from "@mui/icons-material";
+import { AppBar, Badge, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
 import {  NavLink } from "react-router-dom";
 
 const midLinks = [
@@ -22,7 +23,7 @@ function Header({setViewMode}:Props){
     return(
         <AppBar position="static" sx={{mb:4}}>
             <Toolbar>
-                <Typography variant="h5">
+                <Typography variant="h5" component={NavLink} to='/' sx={{textDecoration:'none',color:'inherit'}}>
                     Ecommerce
                 </Typography>
                 <Switch onClick={setViewMode}></Switch>
@@ -43,6 +44,13 @@ function Header({setViewMode}:Props){
                         </ListItem>
                     ))}
                 </List>
+
+                <IconButton size="large" edge='start' color="inherit" sx={{mr:2}}>
+                    <Badge badgeContent='4' color="secondary">
+                        <ShoppingCart />
+                    </Badge>
+                </IconButton>
+
                 <List sx={{display:'flex'}}>
                     {rightLinks.map(({title,path})=>(
                         <ListItem key={title}>
