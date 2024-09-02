@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -21,9 +21,11 @@ function ProductDetails(){
     if(!product) return <h3>Product not found!</h3>
 
     return(
-        <Typography variant="h2">
-            {product.name}
-        </Typography>
+        <Grid container spacing={6}>
+            <Grid item xs={6}>
+                <img src={product.pictureUrl} alt={product.name} style={{width:'100%'}}/>
+            </Grid>
+        </Grid>
     )
 }
 
