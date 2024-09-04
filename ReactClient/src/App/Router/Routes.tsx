@@ -5,6 +5,8 @@ import App from "../Layout/App";
 import ProductDetails from "../../Features/Catalog/ProductDetails";
 import AboutPage from "../../Features/About/AboutPage";
 import ContactPage from "../../Features/Contact/ContactPage";
+import ServerError from "../Errors/ServerError";
+import NotFound from "../Errors/NotFound";
 
 export const router = createBrowserRouter([
     {
@@ -16,6 +18,9 @@ export const router = createBrowserRouter([
             {path:'/catalog/:id', element: <ProductDetails />},
             {path:'/about', element: <AboutPage />},
             {path:'/contact', element: <ContactPage />},
+            {path:'/server-error', element:<ServerError />},
+            {path:'/not-found', element:<NotFound />},
+            {path:'*', element:<NotFound />},
         ]
     }
 ])
