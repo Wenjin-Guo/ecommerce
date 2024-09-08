@@ -15,6 +15,10 @@ builder.Services.AddDbContext<StoreContext>(opt=>{
 });
 
 builder.Services.AddCors();
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
 var app = builder.Build();
 
