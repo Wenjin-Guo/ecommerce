@@ -21,7 +21,7 @@ namespace API.Controllers
             _context = storeContext;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetBasket")]
         public async Task<ActionResult<BasketDto>> GetBasket()
         {
             var basket = await RetrieveBasket();
@@ -43,7 +43,7 @@ namespace API.Controllers
             basket.AddItem(product,quantity);
             //save changes
             var result = await _context.SaveChangesAsync()>0;
-            if(result) return StatusCode(201);
+            if(result) return CreatedAtRoute("GetBasket",MapBasketToDto(basket));
             return BadRequest();
         }
 
