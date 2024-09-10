@@ -9,7 +9,7 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public string BuyerId { get; set; }
-        public ICollection<BasketItem> Items { get; set; } = new List<BasketItem>();
+        public List<BasketItem> Items { get; set; } = new List<BasketItem>();
 
 
         public void AddItem(Product product, int quantity){
@@ -24,7 +24,7 @@ namespace API.Entities
             var item = Items.FirstOrDefault(item=>item.ProductId == productId);
             if(item==null) return;
             item.Quantity -=quantity;
-            if(item.Quantity==0) Items.Remove(item);
+            if(item.Quantity<=0) Items.Remove(item);
         }   
     }
 }
