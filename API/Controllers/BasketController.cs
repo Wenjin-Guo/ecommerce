@@ -80,7 +80,7 @@ namespace API.Controllers
             return basket;
         }
 
-        public BasketDto MapBasketToDto(Basket basket){
+        internal BasketDto MapBasketToDto(Basket basket){
             return new BasketDto{
                 Id = basket.Id,
                 BuyerId = basket.BuyerId,
