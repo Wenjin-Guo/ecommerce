@@ -1,36 +1,43 @@
+import { useState, useEffect } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Header from './Header';
+import { Container } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 
-import { useCallback, useState } from "react";
-import Header from "./Header";
-import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { Outlet } from "react-router-dom";
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
+const App = () => {
+  // Set initial theme based on localStorage
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-function App() {
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
-  const [darkMode, setDarkMode] = useState(false);
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? 'dark' : 'light',
-    },
-  });
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
-  const setViewMode = useCallback(() => {
-    setDarkMode(prevMode => !prevMode);
-  }, []);
-  
   return (
-    
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
-      <Header setViewMode={setViewMode} />
-      
+      <Header toggleTheme={toggleTheme} />
       <Container>
         <Outlet />
       </Container>
-      
     </ThemeProvider>
-  )
-}
+  );
+};
 
 export default App;
