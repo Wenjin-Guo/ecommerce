@@ -32,7 +32,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
-      <Header toggleTheme={toggleTheme} />
+      <Header theme={theme} toggleTheme={toggleTheme} />
       <Container>
         <Outlet />
       </Container>
