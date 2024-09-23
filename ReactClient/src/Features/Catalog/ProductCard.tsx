@@ -3,7 +3,8 @@ import { Product } from "../../App/Models/Product";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Basket } from "../../App/Models/Basket";
 
 interface Props{
     item:Product;
@@ -11,6 +12,25 @@ interface Props{
 
 export default function ProductCard({item}:Props){
     const [loading, setLoading] = useState(false);
+    const [basket, setBasket] = useState<Basket|null>(null);
+    
+    const fetchBasket = async()=>{
+        try {
+            const response = await axios('http://localhost:5000/api/Basket',{
+                method:"get",
+                withCredentials: true
+            });
+            setBasket(response.data)
+        } catch (error) {
+            console.error('Error fetching Basket',error)
+        }
+        
+    }
+
+    useEffect(()=>{
+        fetchBasket();
+    },[basket])
+
     function handleAddItem(productId:number){
         setLoading(true);
         axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=1`,{ 
@@ -18,6 +38,7 @@ export default function ProductCard({item}:Props){
             withCredentials: true 
         })
         .catch(error=>console.log(error))
+        
     }
 
     return(

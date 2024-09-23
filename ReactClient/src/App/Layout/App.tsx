@@ -17,7 +17,10 @@ const darkTheme = createTheme({
   },
 });
 
-const App = () => {
+function App() {
+
+  
+
   // Set initial theme based on localStorage
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 

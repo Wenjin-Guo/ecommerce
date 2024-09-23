@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Basket } from "../../App/Models/Basket";
 import axios from "axios";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";
 
 export function BasketPage(){
@@ -58,14 +58,20 @@ export function BasketPage(){
                 <TableBody>
                     {basket.items.map((item) => (
                         <TableRow key={item.productId}>
-                            <TableCell>{item.name}</TableCell>
+                            <TableCell component="th" scope="row">
+                                <Box display="flex" alignItems="center">
+                                    <img src={item.pictureUrl} alt={item.name} style={{height:50, marginRight:20}}></img>
+                                    <span>{item.name}</span>
+                                </Box>
+                                
+                            </TableCell>
                             <TableCell align="right">${ccyFormat(item.price/100)}</TableCell>
                             <TableCell align="right">
-                                <IconButton >
+                                <IconButton color="error">
                                     <Add/>
                                 </IconButton>  
                                 {item.quantity}
-                                <IconButton >
+                                <IconButton color="error">
                                     <Remove/>
                                 </IconButton> 
                             </TableCell>

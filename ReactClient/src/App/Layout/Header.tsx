@@ -1,7 +1,10 @@
 
 import { ShoppingBag } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  styled,  Switch, Toolbar, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import {  Link, NavLink } from "react-router-dom";
+import { Basket } from "../Models/Basket";
+import axios from "axios";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -86,6 +89,30 @@ interface Props{
 }
 
 function Header({theme, toggleTheme}:Props){
+
+    const [basket, setBasket] = useState<Basket|null>(null);
+    
+    useEffect(()=>{
+        const fetchBasket = async()=>{
+            try {
+                const response = await axios('http://localhost:5000/api/Basket',{
+                    method:"get",
+                    withCredentials: true
+                });
+                setBasket(response.data)
+            } catch (error) {
+                console.error('Error fetching Basket',error)
+            }
+            
+        }
+        fetchBasket();
+    },[basket])
+
+
+
+    const numOfItems = basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
+
+
     return(
         <AppBar position="static" sx={{mb:4}}>
             <Toolbar sx={{display:'flex',alignItems:'center'}}>
@@ -125,7 +152,7 @@ function Header({theme, toggleTheme}:Props){
                             '&:hover': { backgroundColor: 'primary.dark' },
                             '&.active':{color:'primary.dark'} 
                             }}>
-                        <Badge badgeContent='4' color="secondary" >
+                        <Badge badgeContent={numOfItems} color="secondary" >
                             <ShoppingBag />
                         </Badge>
                     </IconButton>
