@@ -124,8 +124,9 @@ function Header({theme, toggleTheme}:Props){
                     
 
                     <FormControlLabel
+                        checked={theme==='light'? false:true}
                         onClick={toggleTheme}
-                        control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked={theme==='light'? false:true} />}
+                        control={<MaterialUISwitch sx={{ m: 1 }} />}
                         label=""
                     />
 
