@@ -30,7 +30,32 @@ export function BasketPage(){
             
         }
         fetchBasket();
-    },[])
+    },[basket])
+
+    function handleAddItem(productId:number){
+        
+        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=1`,{ 
+            method:"post",
+            withCredentials: true 
+        })
+        .catch(error=>console.log(error))
+    }
+
+    function handleRemoveItem(productId:number){
+        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=1`,{ 
+            method:"delete",
+            withCredentials: true 
+        })
+        .catch(error=>console.log(error))
+    }
+
+    function handleRemoveItems(productId:number,quantity:number){
+        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
+            method:"delete",
+            withCredentials: true 
+        })
+        .catch(error=>console.log(error))
+    }
 
     const invoiceSubtotal = basket?.items.reduce((total,item)=>{;
         return total +  item.price*item.quantity/100 ;
@@ -67,17 +92,17 @@ export function BasketPage(){
                             </TableCell>
                             <TableCell align="right">${ccyFormat(item.price/100)}</TableCell>
                             <TableCell align="right">
-                                <IconButton color="error">
+                                <IconButton color="error" onClick={()=>handleAddItem(item.productId)}>
                                     <Add/>
                                 </IconButton>  
                                 {item.quantity}
-                                <IconButton color="error">
+                                <IconButton color="error" onClick={()=>handleRemoveItem(item.productId)}>
                                     <Remove/>
                                 </IconButton> 
                             </TableCell>
                             <TableCell align="right">{ccyFormat((item.price/100)*item.quantity)}</TableCell>
                             <TableCell align="center">
-                                <IconButton color="error">
+                                <IconButton color="error" onClick={()=>handleRemoveItems(item.productId,item.quantity)}>
                                     <DeleteForever fontSize="small" />
                                 </IconButton>   
                             </TableCell>
