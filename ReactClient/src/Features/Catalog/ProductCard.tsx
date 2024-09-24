@@ -76,7 +76,7 @@ export default function ProductCard({item}:Props){
                     }, 1000);
                 }} 
                  variant="contained" size="small">Add to cart</LoadingButton>
-                <Button component={Link} to={`/catalog/${item.id}`} variant="contained" size="small">View</Button>
+                <Button component={Link} to={`/catalog/${item.id}`} variant="contained" size="small" >View</Button>
             </CardActions>
         </Card>
     )
