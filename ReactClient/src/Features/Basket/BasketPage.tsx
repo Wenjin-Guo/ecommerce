@@ -57,7 +57,7 @@ export function BasketPage(){
         .catch(error=>console.log(error))
     }
 
-    const invoiceSubtotal = basket?.items.reduce((total,item)=>{;
+    const invoiceSubtotal = basket?.items.reduce((total,item)=>{
         return total +  item.price*item.quantity/100 ;
     },0)||0;
     const invoiceTaxes = TAX_RATE * invoiceSubtotal;
