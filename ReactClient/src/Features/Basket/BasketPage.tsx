@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { Basket } from "../../App/Models/Basket";
 import axios from "axios";
-import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Grid2, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export function BasketPage(){
 
@@ -61,7 +62,8 @@ export function BasketPage(){
         return total +  item.price*item.quantity/100 ;
     },0)||0;
     const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-    const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+    const deliveryFee = invoiceSubtotal > 100 ? 0 : 5;
+    const invoiceTotal = invoiceTaxes + invoiceSubtotal + deliveryFee;
 
     if(loading) return <Typography>Loading....</Typography>
     if(!basket) return <Typography>Basket is empty</Typography>
@@ -69,6 +71,7 @@ export function BasketPage(){
 
 
     return (
+        <>
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="spanning table">
                 <TableHead>
@@ -100,7 +103,7 @@ export function BasketPage(){
                                     <Remove/>
                                 </IconButton> 
                             </TableCell>
-                            <TableCell align="right">{ccyFormat((item.price/100)*item.quantity)}</TableCell>
+                            <TableCell align="right">${ccyFormat((item.price/100)*item.quantity)}</TableCell>
                             <TableCell align="center">
                                 <IconButton color="error" onClick={()=>handleRemoveItems(item.productId,item.quantity)}>
                                     <DeleteForever fontSize="small" />
@@ -108,21 +111,54 @@ export function BasketPage(){
                             </TableCell>
                         </TableRow>
                     ))}
-                    <TableRow>
-                        <TableCell rowSpan={3} />
-                        <TableCell colSpan={2}>Subtotal</TableCell>
-                        <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell colSpan={2}>Tax</TableCell>
-                        <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell colSpan={2}>Total</TableCell>
-                        <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
-                    </TableRow>
+                    
                 </TableBody>
             </Table>
         </TableContainer>
+        <Grid2 container>
+            <Grid2 size={6}></Grid2>
+            <Grid2 size={6}>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell colSpan={2}>Subtotal</TableCell>
+                                    <TableCell align="right">${ccyFormat(invoiceSubtotal)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell colSpan={2}>Delivery fee*</TableCell>
+                                    <TableCell align="right">${ccyFormat(deliveryFee)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell colSpan={2}>Tax</TableCell>
+                                    <TableCell align="right">${ccyFormat(invoiceTaxes)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell colSpan={2}>Total</TableCell>
+                                    <TableCell align="right">${ccyFormat(invoiceTotal)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell>
+                                        <span style={{ fontStyle: 'italic' }}>*Orders over $100 qualify for free delivery</span>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <Button
+                        component={Link}
+                        to={'/checkout'}
+                        variant="contained"
+                        size="large"
+                        fullWidth>
+                            Checkout
+                    </Button>
+            </Grid2>
+        </Grid2>
+        
+
+
+        </>
+        
     )
 }
