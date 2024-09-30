@@ -1,14 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import HomePage from "../../Features/Home/HomePage";
-import Catalog from "../../Features/Catalog/Catalog";
-import App from "../Layout/App";
-import ProductDetails from "../../Features/Catalog/ProductDetails";
-import AboutPage from "../../Features/About/AboutPage";
-import ContactPage from "../../Features/Contact/ContactPage";
-import ServerError from "../Errors/ServerError";
-import NotFound from "../Errors/NotFound";
-import { BasketPage } from "../../Features/Basket/BasketPage";
-import CheckoutPage from "../../Features/Checkout/CheckoutPage";
+import HomePage from "../../features/home/HomePage";
+import Catalog from "../../features/catalog/Catalog";
+import App from "../layout/App";
+import ProductDetails from "../../features/catalog/ProductDetails";
+import AboutPage from "../../features/about/AboutPage";
+import ContactPage from "../../features/contact/ContactPage";
+import ServerError from "../errors/ServerError";
+import NotFound from "../errors/NotFound";
+import { BasketPage } from "../../features/basket/BasketPage";
+import CheckoutPage from "../../features/checkout/CheckoutPage";
 
 export const router = createBrowserRouter([
     {

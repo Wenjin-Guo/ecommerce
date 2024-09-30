@@ -7,7 +7,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { StrictMode } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { router } from './App/Router/Routes';
+import { router } from './app/router/Routes';
 import ReactDOM from 'react-dom/client';
 
 

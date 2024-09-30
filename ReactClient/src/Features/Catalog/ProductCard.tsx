@@ -1,10 +1,10 @@
 import {  Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia,  Typography } from "@mui/material";
-import { Product } from "../../App/Models/Product";
+import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useEffect, useState } from "react";
-import { Basket } from "../../App/Models/Basket";
+import { Basket } from "../../app/models/basket";
 
 interface Props{
     item:Product;

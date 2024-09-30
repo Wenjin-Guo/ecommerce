@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Basket } from "../../App/Models/Basket";
+import { Basket } from "../../app/models/basket";
 import axios from "axios";
 import { Box, Button, Grid2, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";

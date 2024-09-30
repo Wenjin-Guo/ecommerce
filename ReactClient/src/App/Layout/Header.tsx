@@ -3,7 +3,7 @@ import { ShoppingBag } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  styled,  Switch, Toolbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {  Link, NavLink } from "react-router-dom";
-import { Basket } from "../Models/Basket";
+import { Basket } from "../models/basket";
 import axios from "axios";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({

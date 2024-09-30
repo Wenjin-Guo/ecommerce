@@ -2,9 +2,9 @@ import { Button, Divider, Grid2, Table, TableBody, TableCell, TableContainer, Ta
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {  useParams } from "react-router-dom";
-import { Product } from "../../App/Models/Product";
-import NotFound from "../../App/Errors/NotFound";
-import { Basket } from "../../App/Models/Basket";
+import { Product } from "../../app/models/product";
+import NotFound from "../../app/errors/NotFound";
+import { Basket } from "../../app/models/basket";
 
 function ProductDetails(){
     const {id} = useParams<{id:string}>();
