@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
-import { Basket } from "../../app/models/basket";
-import axios from "axios";
+import { useEffect} from "react"
 import { Box, Button, Grid2, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, AppState } from "../../app/store/configureStore";
+import { addBasketItemsAsync, deleteBasketItemsAsync, fetchBasketAsync } from "./basketSlice";
 
 export function BasketPage(){
 
@@ -13,50 +14,21 @@ export function BasketPage(){
         return `${num.toFixed(2)}`;
     }
 
-    const [loading,setLoading] = useState(true);
-    const [basket, setBasket] = useState<Basket|null>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    
+    const basket = useSelector((state:AppState)=>state.basketState.basket);
+    const status = useSelector((state:AppState)=>state.basketState.status);
+    //const error = useSelector((state:AppState)=>state.basketState.error);
+
     
     useEffect(()=>{
-        const fetchBasket = async()=>{
-            try {
-                const response = await axios('http://localhost:5000/api/Basket',{
-                    method:"get",
-                    withCredentials: true
-                });
-                setBasket(response.data)
-                setLoading(false)
-            } catch (error) {
-                console.error('Error fetching Basket',error)
-            }
-            
-        }
-        fetchBasket();
-    },[basket])
-
-    function handleAddItem(productId:number){
-        
-        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=1`,{ 
-            method:"post",
-            withCredentials: true 
-        })
-        .catch(error=>console.log(error))
-    }
-
-    function handleRemoveItem(productId:number){
-        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=1`,{ 
-            method:"delete",
-            withCredentials: true 
-        })
-        .catch(error=>console.log(error))
-    }
-
-    function handleRemoveItems(productId:number,quantity:number){
-        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
-            method:"delete",
-            withCredentials: true 
-        })
-        .catch(error=>console.log(error))
-    }
+        dispatch(fetchBasketAsync())
+    },[dispatch]);
+    
+    useEffect(() => {
+        console.log('Basket state updated:', basket);
+      }, [basket]);
+   
 
     const invoiceSubtotal = basket?.items.reduce((total,item)=>{
         return total +  item.price*item.quantity/100 ;
@@ -65,10 +37,10 @@ export function BasketPage(){
     const deliveryFee = invoiceSubtotal > 100 ? 0 : 5;
     const invoiceTotal = invoiceTaxes + invoiceSubtotal + deliveryFee;
 
-    if(loading) return <Typography>Loading....</Typography>
+    if(status === 'loading') return <Typography>Loading....</Typography>
     if(!basket) return <Typography>Basket is empty</Typography>
 
-
+   
 
     return (
         <>
@@ -95,17 +67,17 @@ export function BasketPage(){
                             </TableCell>
                             <TableCell align="right">${ccyFormat(item.price/100)}</TableCell>
                             <TableCell align="right">
-                                <IconButton color="error" onClick={()=>handleAddItem(item.productId)}>
+                                <IconButton color="error" onClick={()=>dispatch(addBasketItemsAsync({productId:item.productId,quantity:1}))}>
                                     <Add/>
                                 </IconButton>  
                                 {item.quantity}
-                                <IconButton color="error" onClick={()=>handleRemoveItem(item.productId)}>
+                                <IconButton color="error" onClick={()=>dispatch(deleteBasketItemsAsync({productId:item.productId,quantity:1}))}>
                                     <Remove/>
                                 </IconButton> 
                             </TableCell>
                             <TableCell align="right">${ccyFormat((item.price/100)*item.quantity)}</TableCell>
                             <TableCell align="center">
-                                <IconButton color="error" onClick={()=>handleRemoveItems(item.productId,item.quantity)}>
+                                <IconButton color="error" onClick={()=>dispatch(deleteBasketItemsAsync({productId:item.productId,quantity:item.quantity}))}>
                                     <DeleteForever fontSize="small" />
                                 </IconButton>   
                             </TableCell>

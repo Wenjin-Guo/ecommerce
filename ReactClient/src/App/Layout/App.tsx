@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Header from './Header';
 import { Container } from '@mui/material';
 import { Outlet } from 'react-router-dom';
+import Header from './Header';
 
 const lightTheme = createTheme({
   palette: {

@@ -1,20 +1,22 @@
 
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import counterReducer from "../../features/contact/counterSlice";
+import basketReducer from "../../features/basket/basketSlice";
 
 export const store = configureStore({
     reducer:{
-        counter: counterReducer,
+        counterState: counterReducer,
+        basketState: basketReducer,
     }
 });
 
 export type AppStore = typeof store;
-export type RootState = ReturnType<typeof store.getState>;
+export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = AppStore['dispatch']
 // Define a reusable type describing thunk functions
 export type AppThunk<ThunkReturnType = void> = ThunkAction<
   ThunkReturnType,
-  RootState,
+  AppState,
   unknown,
   Action
 >

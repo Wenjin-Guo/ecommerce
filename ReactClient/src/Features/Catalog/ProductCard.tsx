@@ -1,10 +1,12 @@
 import {  Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia,  Typography } from "@mui/material";
 import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useEffect, useState } from "react";
-import { Basket } from "../../app/models/basket";
+import { useDispatch} from "react-redux";
+import { AppDispatch } from "../../app/store/configureStore";
+import { addBasketItemsAsync } from "../basket/basketSlice";
+import { useState } from "react";
+
 
 interface Props{
     item:Product;
@@ -12,7 +14,7 @@ interface Props{
 
 export default function ProductCard({item}:Props){
     const [loading, setLoading] = useState(false);
-    const [basket, setBasket] = useState<Basket|null>(null);
+    /* const [basket, setBasket] = useState<Basket|null>(null);
     
     const fetchBasket = async()=>{
         try {
@@ -29,15 +31,16 @@ export default function ProductCard({item}:Props){
 
     useEffect(()=>{
         fetchBasket();
-    },[basket])
+    },[]) */
+
+    
+    /* const basket = useSelector((state:AppState)=>state.basketState.basket);
+    const status  = useSelector((state:AppState)=>state.basketState.status); */
+    const dispatch = useDispatch<AppDispatch>();
 
     function handleAddItem(productId:number){
         setLoading(true);
-        axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=1`,{ 
-            method:"post",
-            withCredentials: true 
-        })
-        .catch(error=>console.log(error))
+        dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
         
     }
 

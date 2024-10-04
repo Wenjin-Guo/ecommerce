@@ -1,53 +1,35 @@
-import { Button, Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {  useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import NotFound from "../../app/errors/NotFound";
-import { Basket } from "../../app/models/basket";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store/configureStore";
+import { addBasketItemsAsync } from "../basket/basketSlice";
+import { LoadingButton } from "@mui/lab";
 
 function ProductDetails(){
     const {id} = useParams<{id:string}>();
     
     const [product,setProduct] = useState<Product|null>(null);
     const [loading,setLoading] = useState(true);
-    //const [submitting, setSubmitting] = useState(false);
-    const [basket, setBasket] = useState<Basket|null>(null);
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/products/${id}`)
             .then(response=>setProduct(response.data))
             .catch(error => console.log(error))
             .finally(()=>setLoading(false))
-    },[id])
+    },[])
 
-    useEffect(()=>{
-        const fetchBasket = async()=>{
-            try {
-                const response = await axios('http://localhost:5000/api/Basket',{
-                    method:"get",
-                    withCredentials: true
-                });
-                setBasket(response.data)
-            } catch (error) {
-                console.error('Error fetching Basket',error)
-            }
-            
-        }
-        fetchBasket();
-    },[basket])
+    const dispatch = useDispatch<AppDispatch>();
 
-    function handleAddItem(id:number){
-        
-        axios(`http://localhost:5000/api/Basket?productId=${id}&quantity=1`,{ 
-            method:"post",
-            withCredentials: true 
-        })
-        .catch(error=>console.log(error))
+    function handleAddItem(productId:number){
+        setLoading(true);
+        dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
         
     }
     
-    if(loading) return <h3>Loading....</h3>
     if(!product) return <NotFound />
 
     return(
@@ -88,14 +70,19 @@ function ProductDetails(){
                 
                     
                 <Grid2>
-                    <Button 
-                    onClick={()=>handleAddItem(product.id)}
+                    <LoadingButton loading={loading}
+                    onClick={()=>{
+                        handleAddItem(product.id);
+                        setTimeout(() => {
+                            setLoading(false)
+                        }, 1000);
+                    }} 
                     color="primary"
                     size="medium"
                     variant="contained"
                     fullWidth>
                         Add to Cart
-                    </Button>
+                    </LoadingButton >
                 </Grid2>
                 
             </Grid2>

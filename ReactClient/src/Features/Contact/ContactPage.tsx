@@ -2,12 +2,12 @@
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import {increment,decrement,incrementByAmount} from "./counterSlice"
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store/configureStore";
+import { AppState } from "../../app/store/configureStore";
 
 
 
 function ContactPage(){
-    const count = useSelector((state:RootState)=>state.counter.value);
+    const count = useSelector((state:AppState)=>state.counterState.value);
     const dispatch = useDispatch();
 
     return(

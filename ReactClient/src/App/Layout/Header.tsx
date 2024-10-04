@@ -1,10 +1,9 @@
 
 import { ShoppingBag } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  styled,  Switch, Toolbar, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import {  Link, NavLink } from "react-router-dom";
-import { Basket } from "../models/basket";
-import axios from "axios";
+import { useSelector } from "react-redux";
+import { AppState } from "../store/configureStore";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -90,7 +89,7 @@ interface Props{
 
 function Header({theme, toggleTheme}:Props){
 
-    const [basket, setBasket] = useState<Basket|null>(null);
+    /* const [basket, setBasket] = useState<Basket|null>(null);
     
     useEffect(()=>{
         const fetchBasket = async()=>{
@@ -106,8 +105,8 @@ function Header({theme, toggleTheme}:Props){
             
         }
         fetchBasket();
-    },[basket])
-
+    },[]) */
+    const basket = useSelector((state:AppState)=>state.basketState.basket);
 
 
     const numOfItems = basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
