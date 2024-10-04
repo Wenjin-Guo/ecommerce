@@ -13,14 +13,15 @@ function ProductDetails(){
     const {id} = useParams<{id:string}>();
     
     const [product,setProduct] = useState<Product|null>(null);
+    const [productLoading,setProductLoading] = useState(true);
     const [loading,setLoading] = useState(true);
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/products/${id}`)
             .then(response=>setProduct(response.data))
             .catch(error => console.log(error))
-            .finally(()=>setLoading(false))
-    },[])
+            .finally(()=>setProductLoading(false))
+    },[id]);
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -29,7 +30,7 @@ function ProductDetails(){
         dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
         
     }
-    
+    if(productLoading) return "Loading....";
     if(!product) return <NotFound />
 
     return(
