@@ -2,8 +2,10 @@
 import { ShoppingBag } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  styled,  Switch, Toolbar, Typography } from "@mui/material";
 import {  Link, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { AppState } from "../store/configureStore";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, AppState } from "../store/configureStore";
+import { useEffect } from "react";
+import { fetchBasketAsync } from "../../features/basket/basketSlice";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -88,91 +90,79 @@ interface Props{
 }
 
 function Header({theme, toggleTheme}:Props){
+  const dispatch = useDispatch<AppDispatch>();
+  const basket = useSelector((state:AppState)=>state.basketState.basket);
+  const basketStatus = useSelector((state: AppState) => state.basketState.status);
 
-    /* const [basket, setBasket] = useState<Basket|null>(null);
-    
-    useEffect(()=>{
-        const fetchBasket = async()=>{
-            try {
-                const response = await axios('http://localhost:5000/api/Basket',{
-                    method:"get",
-                    withCredentials: true
-                });
-                setBasket(response.data)
-            } catch (error) {
-                console.error('Error fetching Basket',error)
-            }
-            
-        }
-        fetchBasket();
-    },[]) */
-    const basket = useSelector((state:AppState)=>state.basketState.basket);
+  const numOfItems = basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
+  
+  useEffect(()=>{
+    if(basketStatus === 'idle'){
+      dispatch(fetchBasketAsync());
+    }
+  },[dispatch,basketStatus])
 
+  return(
+      <AppBar position="static" sx={{mb:4}}>
+          <Toolbar sx={{display:'flex',alignItems:'center'}}>
+              
+              <Box display={"flex"} alignItems={'center'} flexGrow={1}>
+                  <Typography variant="h5" component={NavLink} to='/' sx={navStyle}>
+                      Ecommerce
+                  </Typography>
+                  
 
-    const numOfItems = basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
+                  <FormControlLabel
+                      checked={theme==='light'? false:true}
+                      onClick={toggleTheme}
+                      control={<MaterialUISwitch sx={{ m: 1 }} />}
+                      label=""
+                  />
 
+                  <List sx={{ display: 'flex' }}>
+                      {midLinks.map(({ title, path }) => (
+                          <ListItem
+                              component={NavLink}
+                              to={path}
+                              key={title}
+                              sx={navStyle}
+                          >
+                              {title.toUpperCase()}
+                          </ListItem>
+                      ))}
+                  </List>
+              </Box>    
 
-    return(
-        <AppBar position="static" sx={{mb:4}}>
-            <Toolbar sx={{display:'flex',alignItems:'center'}}>
                 
-                <Box display={"flex"} alignItems={'center'} flexGrow={1}>
-                    <Typography variant="h5" component={NavLink} to='/' sx={navStyle}>
-                        Ecommerce
-                    </Typography>
-                    
-
-                    <FormControlLabel
-                        checked={theme==='light'? false:true}
-                        onClick={toggleTheme}
-                        control={<MaterialUISwitch sx={{ m: 1 }} />}
-                        label=""
-                    />
-
-                    <List sx={{ display: 'flex' }}>
-                        {midLinks.map(({ title, path }) => (
-                            <ListItem
-                                component={NavLink}
-                                to={path}
-                                key={title}
-                                sx={navStyle}
-                            >
-                                {title.toUpperCase()}
-                            </ListItem>
-                        ))}
-                    </List>
-                </Box>    
-
-                 
-                
-                <Box display={"flex"} alignItems={'center'}>
-                    <IconButton component={Link} to='/basket' size="large" edge='start' color="inherit" 
-                        sx={{ 
-                            mr: 2, 
-                            '&:hover': { backgroundColor: 'primary.dark' },
-                            '&.active':{color:'primary.dark'} 
-                            }}>
-                        <Badge badgeContent={numOfItems} color="secondary" >
-                            <ShoppingBag />
-                        </Badge>
-                    </IconButton>
-                    <List sx={{ display: 'flex' }}>
-                        {rightLinks.map(({ title, path }) => (
-                            <ListItem
-                                component={NavLink}
-                                to={path}
-                                key={title}
-                                sx={navStyle}
-                            >
-                                {title.toUpperCase()}
-                            </ListItem>
-                        ))}
-                    </List>
-                </Box>        
-                
-            </Toolbar>
-        </AppBar>
-    )
+              
+              <Box display={"flex"} alignItems={'center'}>
+                  <IconButton component={Link} to='/basket' size="large" edge='start' color="inherit" 
+                      sx={{ 
+                          mr: 2, 
+                          '&:hover': { backgroundColor: 'primary.dark' },
+                          '&.active':{color:'primary.dark'} 
+                          }}>
+                      <Badge badgeContent={numOfItems} color="secondary" >
+                          <ShoppingBag />
+                      </Badge>
+                  </IconButton>
+                  <List sx={{ display: 'flex' }}>
+                      {rightLinks.map(({ title, path }) => (
+                          <ListItem
+                              component={NavLink}
+                              to={path}
+                              key={title}
+                              sx={navStyle}
+                          >
+                              {title.toUpperCase()}
+                          </ListItem>
+                      ))}
+                  </List>
+              </Box>        
+              
+          </Toolbar>
+      </AppBar>
+  )
 }
 
 export default Header;
