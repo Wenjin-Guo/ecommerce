@@ -1,18 +1,21 @@
-import { Product } from "../../app/models/product";
+import { useDispatch, useSelector } from "react-redux";
 import ProductList from "./ProductList";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
+import { AppDispatch, AppState } from "../../app/store/configureStore";
+import { fetchProductAsync, productSelectors } from "./productSlice";
 
 
 
 
 export default function Catalog(){
-    const[products, setProduct] = useState<Product[]>([]);
+    const products = productSelectors.selectAll;
+    const productsLoaded = useSelector((state:AppState)=> state.productState.prodcutsLoaded);
+    const dispatch = useDispatch<AppDispatch>();
+    //const[products, setProduct] = useState<Product[]>([]);
 
     useEffect(()=>{
-      fetch('http://localhost:5000/api/products')
-      .then(response=> response.json())
-      .then(data=>setProduct(data))
-    },[])
+      if(!productsLoaded) dispatch(fetchProductAsync());
+    },[productsLoaded,dispatch])
   
 
     return ( 

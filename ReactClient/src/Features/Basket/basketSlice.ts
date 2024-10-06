@@ -17,32 +17,45 @@ const initialState: BasketState = {
 
 
 export const fetchBasketAsync = createAsyncThunk<Basket>('basket/fetchBasket',async()=>{
+  try {
     const response = await axios('http://localhost:5000/api/Basket',{
-        method:"get",
-        withCredentials: true
+      method:"get",
+      withCredentials: true
     });
     return response.data;
+  } catch (error) {
+    console.log(error)
+  }
+    
 });
 
 export const addBasketItemsAsync = createAsyncThunk<Basket,{productId:number,quantity:number}>(
     'basket/addBasketItemsAsync',
     async({productId,quantity})=>{
+      try {
         const response = await axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
-            method:"post",
-            withCredentials: true 
+          method:"post",
+          withCredentials: true 
         });
         return response.data;
+      } catch (error) {
+        console.log(error)
+      }
     }
 );
 
 export const deleteBasketItemsAsync = createAsyncThunk<void,{productId:number,quantity:number}>(
     'basket/deleteBasketItemsAsync', 
     async({productId, quantity})=>{
+      try {
         const response = await axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
-            method:"delete",
-            withCredentials: true 
+          method:"delete",
+          withCredentials: true 
         });
         return response.data;
+      } catch (error) {
+        console.log(error) 
+      }
     }
 )
 
