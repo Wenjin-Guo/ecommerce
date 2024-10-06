@@ -1,36 +1,31 @@
 import { Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import {  useParams } from "react-router-dom";
-import { Product } from "../../app/models/product";
 import NotFound from "../../app/errors/NotFound";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../app/store/configureStore";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, AppState } from "../../app/store/configureStore";
 import { addBasketItemsAsync } from "../basket/basketSlice";
 import { LoadingButton } from "@mui/lab";
+import { fetchSingleProductAsync, selectProductById } from "./productSlice";
 
 function ProductDetails(){
     const {id} = useParams<{id:string}>();
-    
-    const [product,setProduct] = useState<Product|null>(null);
-    const [productLoading,setProductLoading] = useState(true);
-    const [loading,setLoading] = useState(true);
+    const product = useSelector((state:AppState)=>selectProductById(state,Number(id)));
+    const state = useSelector((state:AppState)=>state.productState.prodcutsLoaded);
+    const dispatch = useDispatch<AppDispatch>();
+    const [loading,setLoading] = useState(false);
 
     useEffect(()=>{
-        axios.get(`http://localhost:5000/api/products/${id}`)
-            .then(response=>setProduct(response.data))
-            .catch(error => console.log(error))
-            .finally(()=>setProductLoading(false))
+        dispatch(fetchSingleProductAsync(Number(id)));
     },[id]);
 
-    const dispatch = useDispatch<AppDispatch>();
 
     function handleAddItem(productId:number){
         setLoading(true);
         dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
         
     }
-    if(productLoading) return "Loading....";
+    if(!state) return "Loading....";
     if(!product) return <NotFound />
 
     return(

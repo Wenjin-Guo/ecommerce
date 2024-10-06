@@ -5,9 +5,21 @@ import { AppState } from "../../app/store/configureStore";
 
 const productAdapter = createEntityAdapter<Product>();
 
-export const fetchProductAsync = createAsyncThunk<Product[]>('products/fetchProducts',async()=>{
+export const fetchProductsAsync = createAsyncThunk<Product[]>('products/fetchProducts',async()=>{
     try {
         const response = await axios('http://localhost:5000/api/products',{
+            method:"get",
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+export const fetchSingleProductAsync = createAsyncThunk<Product,number>('products/fetchSingleProduct',async(productId:number)=>{
+    try {
+        const response = await axios(`http://localhost:5000/api/products/${productId}`,{
             method:"get",
             withCredentials: true
         });
@@ -25,15 +37,26 @@ export const productSlice = createSlice({
     }),
     reducers:{},
     extraReducers: (builder=>{
-        builder.addCase(fetchProductAsync.pending, (state)=>{
+        builder.addCase(fetchProductsAsync.pending, (state)=>{
             state.status = "pending"
         });
-        builder.addCase(fetchProductAsync.fulfilled, (state,action)=>{
+        builder.addCase(fetchProductsAsync.fulfilled, (state,action)=>{
             productAdapter.setAll(state,action.payload);
             state.status = 'succeeded';
             state.prodcutsLoaded = true;
         });
-        builder.addCase(fetchProductAsync.rejected, (state)=>{
+        builder.addCase(fetchProductsAsync.rejected, (state)=>{
+            state.status = 'failed';
+        });
+        builder.addCase(fetchSingleProductAsync.pending, (state)=>{
+            state.status = "pending"
+        });
+        builder.addCase(fetchSingleProductAsync.fulfilled, (state,action)=>{
+            productAdapter.setOne(state, action.payload);
+            state.status = 'succeeded';
+            state.prodcutsLoaded = true;
+        });
+        builder.addCase(fetchSingleProductAsync.rejected, (state)=>{
             state.status = 'failed';
         })
     })

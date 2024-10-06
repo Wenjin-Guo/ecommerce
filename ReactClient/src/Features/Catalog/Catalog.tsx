@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProductList from "./ProductList";
 import { useEffect} from "react";
 import { AppDispatch, AppState } from "../../app/store/configureStore";
-import { fetchProductAsync, selectAllProducts } from "./productSlice";
+import { fetchProductsAsync, selectAllProducts } from "./productSlice";
 
 
 
@@ -13,7 +13,7 @@ export default function Catalog(){
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(()=>{
-      if(!productsLoaded) dispatch(fetchProductAsync());
+      if(!productsLoaded) dispatch(fetchProductsAsync());
     },[productsLoaded,dispatch])
   
 
