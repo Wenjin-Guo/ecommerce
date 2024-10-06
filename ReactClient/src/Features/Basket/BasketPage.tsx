@@ -25,9 +25,7 @@ export function BasketPage(){
         dispatch(fetchBasketAsync())
     },[dispatch]);
     
-    useEffect(() => {
-        console.log('Basket state updated:', basket);
-      }, [basket]);
+    //useEffect(() => {}, [basket]);
    
 
     const invoiceSubtotal = basket?.items.reduce((total,item)=>{

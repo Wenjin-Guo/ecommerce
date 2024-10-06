@@ -14,28 +14,7 @@ interface Props{
 
 export default function ProductCard({item}:Props){
     const [loading, setLoading] = useState(false);
-    /* const [basket, setBasket] = useState<Basket|null>(null);
     
-    const fetchBasket = async()=>{
-        try {
-            const response = await axios('http://localhost:5000/api/Basket',{
-                method:"get",
-                withCredentials: true
-            });
-            setBasket(response.data)
-        } catch (error) {
-            console.error('Error fetching Basket',error)
-        }
-        
-    }
-
-    useEffect(()=>{
-        fetchBasket();
-    },[]) */
-
-    
-    /* const basket = useSelector((state:AppState)=>state.basketState.basket);
-    const status  = useSelector((state:AppState)=>state.basketState.status); */
     const dispatch = useDispatch<AppDispatch>();
 
     function handleAddItem(productId:number){
