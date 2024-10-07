@@ -1,10 +1,9 @@
-import { useEffect} from "react"
 import { Box, Button, Grid2, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "../../app/store/configureStore";
-import { addBasketItemsAsync, deleteBasketItemsAsync, fetchBasketAsync } from "./basketSlice";
+import { addBasketItemsAsync, deleteBasketItemsAsync } from "./basketSlice";
 
 export function BasketPage(){
 
@@ -21,9 +20,9 @@ export function BasketPage(){
     //const error = useSelector((state:AppState)=>state.basketState.error);
 
     
-    useEffect(()=>{
+    /* useEffect(()=>{
         dispatch(fetchBasketAsync())
-    },[dispatch]);
+    },[dispatch]); */
     
     //useEffect(() => {}, [basket]);
    

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { Product } from "../../app/models/product";
 import axios from "axios";
 import { AppState } from "../../app/store/configureStore";
+import { Product } from "../../app/models/product";
 
 const productAdapter = createEntityAdapter<Product>();
 

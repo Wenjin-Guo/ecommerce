@@ -11,21 +11,20 @@ import { fetchSingleProductAsync, selectProductById } from "./productSlice";
 function ProductDetails(){
     const {id} = useParams<{id:string}>();
     const product = useSelector((state:AppState)=>selectProductById(state,Number(id)));
-    const state = useSelector((state:AppState)=>state.productState.prodcutsLoaded);
+    const state = useSelector((state:AppState)=>state.productState.status);
     const dispatch = useDispatch<AppDispatch>();
     const [loading,setLoading] = useState(false);
 
     useEffect(()=>{
         dispatch(fetchSingleProductAsync(Number(id)));
-    },[id]);
+    },[]);
 
 
     function handleAddItem(productId:number){
         setLoading(true);
         dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
-        
     }
-    if(!state) return "Loading....";
+    if(state.includes("pending")) return "Loading....";
     if(!product) return <NotFound />
 
     return(

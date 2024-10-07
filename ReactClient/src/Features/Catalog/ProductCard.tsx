@@ -1,11 +1,11 @@
 import {  Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia,  Typography } from "@mui/material";
-import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch} from "react-redux";
 import { AppDispatch } from "../../app/store/configureStore";
 import { addBasketItemsAsync } from "../basket/basketSlice";
 import { useState } from "react";
+import { Product } from "../../app/models/product";
 
 
 interface Props{
