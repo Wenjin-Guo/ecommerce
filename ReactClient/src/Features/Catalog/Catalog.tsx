@@ -13,8 +13,8 @@ export default function Catalog(){
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(()=>{
-      if(!productsLoaded) dispatch(fetchProductsAsync());
-    },[dispatch])
+      if(!productsLoaded){ dispatch(fetchProductsAsync())};
+    },[dispatch,products,productsLoaded])
   
 
     return ( 

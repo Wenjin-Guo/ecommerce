@@ -12,9 +12,9 @@ export const fetchProductsAsync = createAsyncThunk<Product[]>('products/fetchPro
             withCredentials: true
         });
         return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
-        console.log(error);
-        return thunkAPI.rejectWithValue({ error: error.data })
+        return thunkAPI.rejectWithValue({ error:error.data })
     }
 });
 
@@ -25,6 +25,7 @@ export const fetchSingleProductAsync = createAsyncThunk<Product,number>('product
             withCredentials: true
         });
         return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
         return thunkAPI.rejectWithValue({error:error.data})
     }

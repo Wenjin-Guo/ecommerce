@@ -17,7 +17,7 @@ function ProductDetails(){
 
     useEffect(()=>{
         dispatch(fetchSingleProductAsync(Number(id)));
-    },[]);
+    },[id,dispatch]);
 
 
     function handleAddItem(productId:number){
@@ -70,7 +70,7 @@ function ProductDetails(){
                         handleAddItem(product.id);
                         setTimeout(() => {
                             setLoading(false)
-                        }, 1000);
+                        }, 500);
                     }} 
                     color="primary"
                     size="medium"
