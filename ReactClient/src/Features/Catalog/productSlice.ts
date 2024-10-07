@@ -5,27 +5,28 @@ import { Product } from "../../app/models/product";
 
 const productAdapter = createEntityAdapter<Product>();
 
-export const fetchProductsAsync = createAsyncThunk<Product[]>('products/fetchProducts',async()=>{
+export const fetchProductsAsync = createAsyncThunk<Product[]>('products/fetchProducts',async(_,thunkAPI)=>{
     try {
         const response = await axios('http://localhost:5000/api/products',{
             method:"get",
             withCredentials: true
         });
         return response.data;
-    } catch (error) {
+    } catch (error:any) {
         console.log(error);
+        return thunkAPI.rejectWithValue({ error: error.data })
     }
 });
 
-export const fetchSingleProductAsync = createAsyncThunk<Product,number>('products/fetchSingleProduct',async(productId:number)=>{
+export const fetchSingleProductAsync = createAsyncThunk<Product,number>('products/fetchSingleProduct',async(productId,thunkAPI)=>{
     try {
         const response = await axios(`http://localhost:5000/api/products/${productId}`,{
             method:"get",
             withCredentials: true
         });
         return response.data;
-    } catch (error) {
-        console.log(error);
+    } catch (error:any) {
+        return thunkAPI.rejectWithValue({error:error.data})
     }
 });
 
@@ -45,7 +46,8 @@ export const productSlice = createSlice({
             state.status = 'succeeded';
             state.prodcutsLoaded = true;
         });
-        builder.addCase(fetchProductsAsync.rejected, (state)=>{
+        builder.addCase(fetchProductsAsync.rejected, (state, action) => {
+            console.log(action);
             state.status = 'failed';
         });
         builder.addCase(fetchSingleProductAsync.pending, (state)=>{
@@ -56,7 +58,8 @@ export const productSlice = createSlice({
             state.status = 'succeeded';
             state.prodcutsLoaded = true;
         });
-        builder.addCase(fetchSingleProductAsync.rejected, (state)=>{
+        builder.addCase(fetchSingleProductAsync.rejected, (state,action)=> {
+            console.log(action);
             state.status = 'failed';
         })
     })
