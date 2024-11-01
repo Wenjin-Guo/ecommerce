@@ -57,7 +57,7 @@ namespace API.Controllers
         [Authorize]
         [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser(){
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
             return new UserDto{
                 Email= user.Email,
                 Token = await _tokenServices.GenerateToken(user)

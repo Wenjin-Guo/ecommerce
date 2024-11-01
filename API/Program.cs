@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using API.Data;
 using API.Entities;
@@ -55,6 +56,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            NameClaimType = ClaimTypes.Email,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
                 GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
