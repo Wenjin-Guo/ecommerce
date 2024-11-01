@@ -11,20 +11,28 @@ namespace API.Data
     public static class DbInitializer
     {
         public static async Task Initialize(StoreContext context, UserManager<User> userManager){
+
             if(!userManager.Users.Any()){
                 var user = new User{
-                    UserName = "bob",
-                    Email = "bob@test.com"
+                    FirstName = "Simon",
+                    LastName = "Guo",
+                    StreetAddress = "345 warden st",
+                    City = "Toronto",
+                    Province = "ON",
+                    PostalCode = "M4D6C8",
+                    PhoneNumber = "2136737863",
+                    Email = "simon@test.com",
+                    UserName = "simon@test.com"
                 };
-                await userManager.CreateAsync(user, "Pa$$w0rd");
-                await userManager.AddToRoleAsync(user, "Member");
+                await userManager.CreateAsync(user, "Qwe!234");
+                await userManager.AddToRoleAsync(user,"Member");
                 
                 var admin = new User{
-                    UserName = "admin",
+                    UserName = "admin@test.com",
                     Email = "admin@test.com"
                 };
-                await userManager.CreateAsync(admin, "Pa$$w0rd");
-                await userManager.AddToRolesAsync(admin, new[] { "Member, Admin" });
+                await userManager.CreateAsync(admin, "Qwe!234");
+                await userManager.AddToRolesAsync(admin, new[] { "Member", "Admin" });
             }
 
             if(context.Products.Any()) return;

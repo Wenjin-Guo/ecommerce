@@ -24,7 +24,7 @@ namespace API.Data
             base.OnModelCreating(builder);
             builder.Entity<IdentityRole>()
                 .HasData(
-                    new IdentityRole{Name = " Member", NormalizedName = "MEMBER"},
+                    new IdentityRole{Name = "Member", NormalizedName = "MEMBER"},
                     new IdentityRole{Name = "Admin", NormalizedName = "ADMIN"}
                 );
         }
