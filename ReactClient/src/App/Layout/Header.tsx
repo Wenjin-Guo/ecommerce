@@ -100,7 +100,7 @@ function Header({theme, toggleTheme}:Props){
     if(basketStatus === 'idle'){
       dispatch(fetchBasketAsync());
     }
-  },[dispatch])
+  },[basketStatus, dispatch])
 
   return(
       <AppBar position="static" sx={{mb:4}}>
