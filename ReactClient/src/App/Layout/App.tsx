@@ -38,7 +38,7 @@ function App() {
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
         <Header theme={theme} toggleTheme={toggleTheme} />
-      <Container>
+      <Container >
         <Outlet />
       </Container>
     </ThemeProvider>

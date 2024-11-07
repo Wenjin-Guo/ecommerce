@@ -16,6 +16,8 @@ import { styled } from '@mui/material/styles';
 import ColorModeSelect from '../customize/ColorModelSelect';
 import ForgotPassword from './ForgortPassword';
 import { FacebookIcon, GoogleIcon } from './CustomIcons';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -37,7 +39,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
-  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+  //gap between header and container
+  height: 'calc((1 - var(--template-frame-height, 0)) * 80dvh)',
   minHeight: '100%',
   padding: theme.spacing(2),
   [theme.breakpoints.up('sm')]: {
@@ -52,6 +55,9 @@ export default function Login() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [email, setEmail] = React.useState('');
+  const [rememberMe, setRememberMe] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -61,17 +67,60 @@ export default function Login() {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
+  React.useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true); // Set checkbox to checked if email was remembered
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  }, []);
+
+  const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberMe(e.target.checked);
+    if (!e.target.checked) {
+      // If checkbox is unchecked, remove email from localStorage
+      localStorage.removeItem('rememberedEmail');
+    }
   };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent default form submission
+    
+    const data = new FormData(event.currentTarget);
+    const email = data.get('email') as string;
+    const password = data.get('password') as string;
+  
+    const isValid = validateInputs();
+  
+  
+    if (isValid) {
+      try {
+        const response = await axios(`http://localhost:5000/login?Email=${email}&Password=${password}`, {
+          method:"post",
+          withCredentials: true 
+        });
+  
+        if (response.status === 200) {
+          //console.log('Login successful', response.data);
+          if (rememberMe) {
+            localStorage.setItem('rememberedEmail', email);
+          } else {
+            localStorage.removeItem('rememberedEmail');
+          }
+          // Handle successful login, e.g., store token, redirect user
+          navigate('/');
+        } else {
+          console.error('Login failed');
+          // Optionally, display error message to the user
+        }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        console.error('An unexpected error occurred. Please try again.');
+      }
+    }
+  };
+  
+  
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -88,6 +137,7 @@ export default function Login() {
       setEmailErrorMessage('');
     }
 
+    
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
@@ -133,7 +183,9 @@ export default function Login() {
                 type="email"
                 name="email"
                 placeholder="your@email.com"
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
+                value={email}
                 autoFocus
                 required
                 fullWidth
@@ -170,7 +222,7 @@ export default function Login() {
               />
             </FormControl>
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox checked={rememberMe} onChange={handleRememberMeChange} />}
               label="Remember me"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
@@ -186,7 +238,7 @@ export default function Login() {
               Don&apos;t have an account?{' '}
               <span>
                 <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
+                  href="/register"
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
