@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
@@ -18,6 +17,7 @@ import ForgotPassword from './ForgortPassword';
 import { FacebookIcon, GoogleIcon } from './CustomIcons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast} from 'react-toastify';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -107,15 +107,18 @@ export default function Login() {
           } else {
             localStorage.removeItem('rememberedEmail');
           }
+          toast.success('Successfully login')
           // Handle successful login, e.g., store token, redirect user
           navigate('/');
         } else {
           console.error('Login failed');
           // Optionally, display error message to the user
+          toast.error('Unauthorized');
         }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         console.error('An unexpected error occurred. Please try again.');
+        toast.error('Unauthorized');
       }
     }
   };
@@ -152,7 +155,6 @@ export default function Login() {
 
   return (
     <>
-      <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">

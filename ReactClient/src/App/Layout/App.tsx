@@ -4,6 +4,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const lightTheme = createTheme({
   palette: {
@@ -40,7 +42,20 @@ function App() {
         <Header theme={theme} toggleTheme={toggleTheme} />
       <Container >
         <Outlet />
+        
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={theme}
+      />
     </ThemeProvider>
   );
 };
