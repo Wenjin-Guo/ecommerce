@@ -22,12 +22,39 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if(user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password)){
-                return Unauthorized();
+
+            // If user doesn't exist
+            if (user == null)
+            {
+                return Unauthorized("Invalid credentials.");
             }
-            return new UserDto{
+
+            // If user is locked out, return an appropriate message
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                return Unauthorized("Your account is locked. Please try again later.");
+            }
+
+            // Check password
+            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+            if (!result)
+            {
+                // Increment failed attempts
+                await _userManager.AccessFailedAsync(user);
+                return Unauthorized("Invalid credentials.");
+            }
+
+            // Reset failed attempts if login is successful
+            await _userManager.ResetAccessFailedCountAsync(user);
+
+            // Generate the JWT token after successful login
+            var token = await _tokenServices.GenerateToken(user);
+
+            // Return user details along with the generated token
+            return new UserDto
+            {
                 Email = user.Email,
-                Token = await _tokenServices.GenerateToken(user)
+                Token = token
             };
         }
 
@@ -51,6 +78,7 @@ namespace API.Controllers
                 return ValidationProblem();
             }
             await _userManager.AddToRoleAsync(user,"Member");
+            await _userManager.SetLockoutEnabledAsync(user, true); // Enable lockout for the user
             return StatusCode(201);
         }
 

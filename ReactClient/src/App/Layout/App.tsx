@@ -54,6 +54,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        stacked 
         theme={theme}
       />
     </ThemeProvider>

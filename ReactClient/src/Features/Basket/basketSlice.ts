@@ -4,8 +4,8 @@ import axios from "axios";
 
 interface BasketState{
     basket:Basket|null,
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string | null;
+    status: 'idle' | 'loading' | 'succeeded' | 'failed',
+    error: string | null,
 };
 
 const initialState: BasketState = {

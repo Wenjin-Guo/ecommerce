@@ -46,9 +46,13 @@ builder.Services.AddDbContext<StoreContext>(opt=>{
 builder.Services.AddCors();
 builder.Services.AddIdentityCore<User>(opt=>{
     opt.User.RequireUniqueEmail = true;
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); // Duration of lockout
+    opt.Lockout.MaxFailedAccessAttempts = 5;                        // Max attempts before lockout
+    opt.Lockout.AllowedForNewUsers = true;
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<StoreContext>();
+    .AddEntityFrameworkStores<StoreContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt=>{
         opt.TokenValidationParameters = new TokenValidationParameters{

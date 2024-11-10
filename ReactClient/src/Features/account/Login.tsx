@@ -15,9 +15,11 @@ import { styled } from '@mui/material/styles';
 import ColorModeSelect from '../customize/ColorModelSelect';
 import ForgotPassword from './ForgortPassword';
 import { FacebookIcon, GoogleIcon } from './CustomIcons';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast} from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, AppState } from '../../app/store/configureStore';
+import { signInUser } from './accountSlice';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -59,6 +61,15 @@ export default function Login() {
   const [email, setEmail] = React.useState('');
   const [rememberMe, setRememberMe] = React.useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const { error, status } = useSelector((state:AppState)=>state.accountState);
+
+  React.useEffect(() => {
+    if (status === 'failed' && error) {
+      toast.error(error); // Display error from Redux store
+    }
+  }, [status, error]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -94,7 +105,7 @@ export default function Login() {
   
   
     if (isValid) {
-      try {
+      /* try {
         const response = await axios(`http://localhost:5000/login?Email=${email}&Password=${password}`, {
           method:"post",
           withCredentials: true 
@@ -111,15 +122,36 @@ export default function Login() {
           // Handle successful login, e.g., store token, redirect user
           navigate('/');
         } else {
-          console.error('Login failed');
+          //console.error('Login failed');
           // Optionally, display error message to the user
           toast.error('Unauthorized');
         }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        console.error('An unexpected error occurred. Please try again.');
-        toast.error('Unauthorized');
-      }
+        //console.log(error.response.data);
+        if (axios.isAxiosError(error)) {
+          const errorMessage = error.response?.data|| 'An unexpected error occurred. Please try again.';
+          toast.error(errorMessage);
+        } else {
+          // In case it's not an Axios error
+          toast.error('An unexpected error occurred. Please try again.');
+        }
+      } */
+
+        const result = await dispatch(signInUser({ email, password }));
+
+        if (signInUser.fulfilled.match(result)) {
+          toast.success('Successfully logged in');
+          if (rememberMe) {
+            localStorage.setItem('rememberedEmail', email);
+          } else {
+            localStorage.removeItem('rememberedEmail');
+          }
+          navigate('/');
+        } else if (signInUser.rejected.match(result)) {
+          // Error is already handled in Redux, so no additional handling needed here.
+        }
+
+
     }
   };
   
