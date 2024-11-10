@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "../store/configureStore";
 import { useEffect } from "react";
 import { fetchBasketAsync } from "../../features/basket/basketSlice";
+import SignedInMenue from "./SignedInMenu";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -91,6 +92,7 @@ interface Props{
 
 function Header({theme, toggleTheme}:Props){
   const dispatch = useDispatch<AppDispatch>();
+  const account = useSelector((state:AppState)=>state.accountState);
   const basket = useSelector((state:AppState)=>state.basketState.basket);
   const basketStatus = useSelector((state: AppState) => state.basketState.status);
 
@@ -100,7 +102,7 @@ function Header({theme, toggleTheme}:Props){
     if(basketStatus === 'idle'){
       dispatch(fetchBasketAsync());
     }
-  },[basketStatus, dispatch])
+  },[basketStatus,account, dispatch])
 
   return(
       <AppBar position="static" sx={{mb:4}}>
@@ -146,6 +148,9 @@ function Header({theme, toggleTheme}:Props){
                           <ShoppingBag />
                       </Badge>
                   </IconButton>
+                  {account.status==="succeeded"?(
+                    <SignedInMenue />
+                  ) :(
                   <List sx={{ display: 'flex' }}>
                       {rightLinks.map(({ title, path }) => (
                           <ListItem
@@ -158,6 +163,7 @@ function Header({theme, toggleTheme}:Props){
                           </ListItem>
                       ))}
                   </List>
+                  )}
               </Box>        
               
           </Toolbar>

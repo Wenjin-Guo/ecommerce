@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { User } from "../../app/models/user";
 import axios from "axios";
+import { router } from "../../app/router/Routes";
 
 interface AccountState{
     user:User | null
@@ -55,7 +56,14 @@ export const fetchCurrentUser = createAsyncThunk<User>(
 export const accountSlice = createSlice({
     name:'account',
     initialState,
-    reducers:{},
+    reducers:{
+        signOut:(state)=>{
+            state.user =null;
+            state.status='idle';
+            localStorage.removeItem('user');
+            router.navigate('/');
+        }
+    },
     extraReducers:(builder=>{
         builder.addMatcher(
             isAnyOf(signInUser.pending,fetchCurrentUser.pending),(state)=>{
@@ -78,4 +86,5 @@ export const accountSlice = createSlice({
     })
 });
 
+export const{signOut} = accountSlice.actions;
 export default accountSlice.reducer;
