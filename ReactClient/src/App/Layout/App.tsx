@@ -6,6 +6,9 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { fetchCurrentUser } from '../../features/account/accountSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/configureStore';
 
 const lightTheme = createTheme({
   palette: {
@@ -21,14 +24,18 @@ const darkTheme = createTheme({
 
 function App() {
 
-  
+  const dispatch = useDispatch<AppDispatch>();
 
   // Set initial theme based on localStorage
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
+    const user = localStorage.getItem('user');
     localStorage.setItem('theme', theme);
-  }, [theme]);
+    if(user){
+      dispatch(fetchCurrentUser());
+    }
+  }, [theme,dispatch]);
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -42,7 +49,6 @@ function App() {
         <Header theme={theme} toggleTheme={toggleTheme} />
       <Container >
         <Outlet />
-        
       </Container>
       <ToastContainer
         position="bottom-right"

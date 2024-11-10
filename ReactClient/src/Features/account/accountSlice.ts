@@ -36,19 +36,43 @@ export const signInUser = createAsyncThunk<User,{email:string,password:string}>(
 )
 
 export const fetchCurrentUser = createAsyncThunk<User>(
-    'account/currentUser',
+    'account/fetchCurrentUser',
     async(_,thunkAPI)=>{
         try {
+            // Get the token from localStorage
+            const token = JSON.parse(localStorage.getItem('user')as string).token;
+            console.log("Token from localstorage is: "+ token);
+            // If token is not found, reject the request
+            if (!token) {
+                return thunkAPI.rejectWithValue('No token found, please login again.');
+            }
             const user = await axios(`http://localhost:5000/currentUser`, {
-                method:"post",
+                method:"get",
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add Bearer token to the Authorization header
+                  },
                 withCredentials: true 
             });
-            localStorage.setItem('user',JSON.stringify(user));
+            localStorage.setItem('user',JSON.stringify(user.data));
             return user.data;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-        } catch (error:any) {
+        
+        } catch (error) {
             const errorMessage = 'Failed to fetch current user';
-            return thunkAPI.rejectWithValue(errorMessage)
+            // Handle axios errors
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.status === 401) {
+                    return thunkAPI.rejectWithValue('Unauthorized. Please log in again.');
+                } else {
+                    return thunkAPI.rejectWithValue(errorMessage);
+                }
+            }
+            // Handle non-Axios errors (e.g., network issues)
+            return thunkAPI.rejectWithValue(errorMessage);
+        }
+    },
+    {
+        condition:()=>{
+            if(!localStorage.getItem('user')) return false;
         }
     }
 )
@@ -80,6 +104,7 @@ export const accountSlice = createSlice({
             isAnyOf(signInUser.rejected,fetchCurrentUser.rejected),(state,action)=>{
                 state.status = 'failed';
                 state.error = action.payload as string;
+                localStorage.removeItem('user');
                 //console.log(action.payload)
             }
         )
