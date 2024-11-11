@@ -54,7 +54,7 @@ export default function ProductCard({item}:Props){
                     handleAddItem(item.id);
                     setTimeout(() => {
                         setLoading(false)
-                    }, 1000);
+                    }, 500);
                 }} 
                  variant="contained" size="small">Add to cart</LoadingButton>
                 <Button component={Link} to={`/catalog/${item.id}`} variant="contained" size="small" >View</Button>

@@ -14,15 +14,8 @@ namespace API.Data
 
             if(!userManager.Users.Any()){
                 var user = new User{
-                    FirstName = "Simon",
-                    LastName = "Guo",
-                    StreetAddress = "345 warden st",
-                    City = "Toronto",
-                    Province = "ON",
-                    PostalCode = "M4D6C8",
-                    PhoneNumber = "2136737863",
+                    UserName = "Simon",
                     Email = "simon@test.com",
-                    UserName = "simon@test.com"
                 };
                 await userManager.CreateAsync(user, "Qwe!234");
                 await userManager.AddToRoleAsync(user,"Member");

@@ -49,6 +49,11 @@ builder.Services.AddIdentityCore<User>(opt=>{
     opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); // Duration of lockout
     opt.Lockout.MaxFailedAccessAttempts = 5;                        // Max attempts before lockout
     opt.Lockout.AllowedForNewUsers = true;
+    opt.Password.RequiredLength = 6;
+    opt.Password.RequireDigit = false;              // Require at least one numeric digit
+    opt.Password.RequireLowercase = false;          // Require at least one lowercase letter
+    opt.Password.RequireUppercase = false;          // Require at least one uppercase letter
+    opt.Password.RequireNonAlphanumeric = false;    // Require at least one special character
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<StoreContext>()

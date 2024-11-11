@@ -59,25 +59,23 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register(RegisterDto registerDto){
-            var user = new User{
-                FirstName = registerDto.FirstName, 
-                LastName = registerDto.LastName,
-                Email = registerDto.Email,
-                StreetAddress = registerDto.StreetAddress,
-                City = registerDto.City,
-                Province = registerDto.Province,
-                PostalCode = registerDto.PostalCode,
-                UserName = registerDto.Email
-                };
+        public async Task<ActionResult> Register(RegisterDto registerDto)
+        {
+            var user = new User { UserName = registerDto.Email, Email = registerDto.Email ,FirstName = registerDto.UserName};
+
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-            if(!result.Succeeded){
-                foreach(var error in result.Errors){
-                    ModelState.AddModelError(error.Code,error.Description);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
                 }
+
                 return ValidationProblem();
             }
-            await _userManager.AddToRoleAsync(user,"Member");
+
+            await _userManager.AddToRoleAsync(user, "Member");
             await _userManager.SetLockoutEnabledAsync(user, true); // Enable lockout for the user
             return StatusCode(201);
         }

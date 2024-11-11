@@ -37,6 +37,7 @@ export const fetchBasketAsync = createAsyncThunk<Basket>(
     }
   },
   {
+    
     condition:()=>{
       if(!getCookie('buyerId')) return false;
     }

@@ -95,6 +95,32 @@ export default function Login() {
     }
   };
 
+  const validateInputs = () => {
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+
+    let isValid = true;
+
+    if (!email.value || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email.value)) {
+      setEmailError(true);
+      setEmailErrorMessage('Please enter a valid email address.');
+      isValid = false;
+    } else {
+      setEmailError(false);
+      setEmailErrorMessage('');
+    }
+
+    if (!password.value || password.value.length < 6) {
+      setPasswordError(true);
+      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      isValid = false;
+    } else {
+      setPasswordError(false);
+      setPasswordErrorMessage('');
+    }
+    return isValid;
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent default form submission
     
@@ -117,36 +143,6 @@ export default function Login() {
     }
   };
   
-  
-
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    return isValid;
-  };
-
   return (
     <>
       <SignInContainer direction="column" justifyContent="space-between">
