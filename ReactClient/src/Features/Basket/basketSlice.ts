@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Basket } from "../../app/models/basket";
 import axios from "axios";
+import { getCookie } from "../../app/util/util";
 
 interface BasketState{
     basket:Basket|null,
@@ -16,22 +17,35 @@ const initialState: BasketState = {
 
 
 
-export const fetchBasketAsync = createAsyncThunk<Basket>('basket/fetchBasket',async()=>{
-  try {
-    const response = await axios('http://localhost:5000/api/Basket',{
-      method:"get",
-      withCredentials: true
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error)
+export const fetchBasketAsync = createAsyncThunk<Basket>(
+  'basket/fetchBasket',
+  async (_,thunkAPI) => {
+    try {
+      const response = await axios('http://localhost:5000/api/Basket', {
+        method: "get",
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      const errorMessage = 'Failed to fetch the basket';
+      // Handle axios errors
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(errorMessage);
+      }
+      // Handle non-Axios errors (e.g., network issues)
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  },
+  {
+    condition:()=>{
+      if(!getCookie('buyerId')) return false;
+    }
   }
-    
-});
+);
 
 export const addBasketItemsAsync = createAsyncThunk<Basket,{productId:number,quantity:number}>(
     'basket/addBasketItemsAsync',
-    async({productId,quantity})=>{
+    async({productId,quantity}, thunkAPI)=>{
       try {
         const response = await axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
           method:"post",
@@ -39,14 +53,20 @@ export const addBasketItemsAsync = createAsyncThunk<Basket,{productId:number,qua
         });
         return response.data;
       } catch (error) {
-        console.log(error)
+        const errorMessage = 'Failed to add the item';
+        // Handle axios errors
+        if (axios.isAxiosError(error) && error.response) {
+          return thunkAPI.rejectWithValue(errorMessage);
+        }
+        // Handle non-Axios errors (e.g., network issues)
+        return thunkAPI.rejectWithValue(errorMessage);
       }
     }
 );
 
 export const deleteBasketItemsAsync = createAsyncThunk<void,{productId:number,quantity:number}>(
     'basket/deleteBasketItemsAsync', 
-    async({productId, quantity})=>{
+    async({productId, quantity},thunkAPI)=>{
       try {
         const response = await axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
           method:"delete",
@@ -54,7 +74,13 @@ export const deleteBasketItemsAsync = createAsyncThunk<void,{productId:number,qu
         });
         return response.data;
       } catch (error) {
-        console.log(error) 
+        const errorMessage = 'Failed to delete the item';
+        // Handle axios errors
+        if (axios.isAxiosError(error) && error.response) {
+          return thunkAPI.rejectWithValue(errorMessage);
+        }
+        // Handle non-Axios errors (e.g., network issues)
+        return thunkAPI.rejectWithValue(errorMessage);
       }
     }
 )
@@ -75,16 +101,9 @@ export const basketSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-          .addCase(fetchBasketAsync.pending, (state) => {
-            state.status = 'loading';
-          })
           .addCase(fetchBasketAsync.fulfilled, (state, action) => {
             state.status = 'succeeded';
             state.basket = action.payload;
-          })
-          .addCase(fetchBasketAsync.rejected, (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message || 'Failed to fetch basket';
           })
           .addCase(addBasketItemsAsync.pending, (state) => {
             state.status = 'loading';
@@ -95,7 +114,7 @@ export const basketSlice = createSlice({
           })
           .addCase(addBasketItemsAsync.rejected, (state, action) => {
             state.status = 'failed';
-            state.error = action.error.message || 'Failed to fetch basket';
+            state.error = action.error.message as string;
           })
           .addCase(deleteBasketItemsAsync.pending, (state) => {
             state.status = 'loading';

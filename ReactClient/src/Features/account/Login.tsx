@@ -59,6 +59,7 @@ export default function Login() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [rememberMe, setRememberMe] = React.useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -97,61 +98,22 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent default form submission
     
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email') as string;
-    const password = data.get('password') as string;
-  
     const isValid = validateInputs();
   
-  
+    if(!isValid) return;
     if (isValid) {
-      /* try {
-        const response = await axios(`http://localhost:5000/login?Email=${email}&Password=${password}`, {
-          method:"post",
-          withCredentials: true 
-        });
-  
-        if (response.status === 200) {
-          //console.log('Login successful', response.data);
-          if (rememberMe) {
-            localStorage.setItem('rememberedEmail', email);
-          } else {
-            localStorage.removeItem('rememberedEmail');
-          }
-          toast.success('Successfully login')
-          // Handle successful login, e.g., store token, redirect user
-          navigate('/');
+      const result = await dispatch(signInUser({ email, password }));
+      if (signInUser.fulfilled.match(result)) {
+        toast.success('Successfully logged in');
+        if (rememberMe) {
+          localStorage.setItem('rememberedEmail', email);
         } else {
-          //console.error('Login failed');
-          // Optionally, display error message to the user
-          toast.error('Unauthorized');
+          localStorage.removeItem('rememberedEmail');
         }
-      } catch (error) {
-        //console.log(error.response.data);
-        if (axios.isAxiosError(error)) {
-          const errorMessage = error.response?.data|| 'An unexpected error occurred. Please try again.';
-          toast.error(errorMessage);
-        } else {
-          // In case it's not an Axios error
-          toast.error('An unexpected error occurred. Please try again.');
-        }
-      } */
-
-        const result = await dispatch(signInUser({ email, password }));
-
-        if (signInUser.fulfilled.match(result)) {
-          toast.success('Successfully logged in');
-          if (rememberMe) {
-            localStorage.setItem('rememberedEmail', email);
-          } else {
-            localStorage.removeItem('rememberedEmail');
-          }
-          navigate('/');
-        } else if (signInUser.rejected.match(result)) {
-          // Error is already handled in Redux, so no additional handling needed here.
-        }
-
-
+        navigate('/');
+      } else if (signInUser.rejected.match(result)) {
+        // Error is already handled in Redux, so no additional handling needed here.
+      }
     }
   };
   
@@ -220,7 +182,6 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 value={email}
-                autoFocus
                 required
                 fullWidth
                 variant="outlined"
@@ -245,9 +206,11 @@ export default function Login() {
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 name="password"
-                placeholder="••••••"
+                placeholder="Enter your password"
                 type="password"
                 id="password"
+                value={password} // Let the browser autofill password
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 required
                 fullWidth

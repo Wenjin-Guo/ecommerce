@@ -20,7 +20,6 @@ export default function ProductCard({item}:Props){
     function handleAddItem(productId:number){
         setLoading(true);
         dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
-        
     }
 
     return(

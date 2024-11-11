@@ -14,7 +14,7 @@ export default function Catalog(){
 
     useEffect(()=>{
       if(!productsLoaded){ dispatch(fetchProductsAsync())};
-    },[dispatch,products,productsLoaded])
+    },[dispatch, products, productsLoaded])
   
 
     return ( 

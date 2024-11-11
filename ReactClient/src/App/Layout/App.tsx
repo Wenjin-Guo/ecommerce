@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchCurrentUser } from '../../features/account/accountSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/configureStore';
+import { fetchBasketAsync } from '../../features/basket/basketSlice';
 
 const lightTheme = createTheme({
   palette: {
@@ -29,13 +30,18 @@ function App() {
   // Set initial theme based on localStorage
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    localStorage.setItem('theme', theme);
-    if(user){
-      dispatch(fetchCurrentUser());
+  const initApp = useCallback(async () => {
+    try {
+      await dispatch(fetchCurrentUser());
+      await dispatch(fetchBasketAsync());
+    } catch (error) {
+      console.log(error);
     }
-  }, [theme,dispatch]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    initApp();
+  }, [initApp])
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));

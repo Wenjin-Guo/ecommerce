@@ -41,7 +41,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
         try {
             // Get the token from localStorage
             const token = JSON.parse(localStorage.getItem('user')as string).token;
-            console.log("Token from localstorage is: "+ token);
+            //console.log("Token from localstorage is: "+ token);
             // If token is not found, reject the request
             if (!token) {
                 return thunkAPI.rejectWithValue('No token found, please login again.');

@@ -2,10 +2,8 @@
 import { ShoppingBag } from "@mui/icons-material";
 import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  styled,  Switch, Toolbar, Typography } from "@mui/material";
 import {  Link, NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, AppState } from "../store/configureStore";
-import { useEffect } from "react";
-import { fetchBasketAsync } from "../../features/basket/basketSlice";
+import { useSelector } from "react-redux";
+import {  AppState } from "../store/configureStore";
 import SignedInMenue from "./SignedInMenu";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -91,18 +89,13 @@ interface Props{
 }
 
 function Header({theme, toggleTheme}:Props){
-  const dispatch = useDispatch<AppDispatch>();
   const account = useSelector((state:AppState)=>state.accountState);
-  const basket = useSelector((state:AppState)=>state.basketState.basket);
-  const basketStatus = useSelector((state: AppState) => state.basketState.status);
+  const basketState = useSelector((state:AppState)=>state.basketState);
 
-  const numOfItems = basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
+  console.log(basketState.basket?.items);
+  const numOfItems = basketState.basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
+  console.log("number of products in basket is: "+numOfItems);
   
-  useEffect(()=>{
-    if(basketStatus === 'idle'){
-      dispatch(fetchBasketAsync());
-    }
-  },[basketStatus,account, dispatch])
 
   return(
       <AppBar position="static" sx={{mb:4}}>
