@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { User } from "../../app/models/user";
 import axios from "axios";
 import { router } from "../../app/router/Routes";
+import { setBasket } from "../basket/basketSlice";
 
 interface AccountState{
     user:User | null
@@ -19,12 +20,14 @@ export const signInUser = createAsyncThunk<User,{email:string,password:string}>(
     'account/signInUser',
     async({email,password},thunkAPI)=>{
         try {
-            const user = await axios(`http://localhost:5000/login?Email=${email}&Password=${password}`, {
+            const userDto = await axios(`http://localhost:5000/login?Email=${email}&Password=${password}`, {
                 method:"post",
                 withCredentials: true 
             });
-            localStorage.setItem('user',JSON.stringify(user.data));
-            return user.data;
+            const{basket,...user} = userDto.data;
+            if(basket) thunkAPI.dispatch(setBasket(basket));
+            localStorage.setItem('user',JSON.stringify(user));
+            return userDto.data;
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 const errorMessage = error.response.data === "Your account is locked. Please try again later." ? "Your account is locked." : "Invalid credentials.";
@@ -46,16 +49,17 @@ export const fetchCurrentUser = createAsyncThunk<User>(
             if (!token) {
                 return thunkAPI.rejectWithValue('No token found, please login again.');
             }
-            const user = await axios(`http://localhost:5000/currentUser`, {
+            const userDto = await axios(`http://localhost:5000/currentUser`, {
                 method:"get",
                 headers: {
                     Authorization: `Bearer ${token}`, // Add Bearer token to the Authorization header
                   },
                 withCredentials: true 
             });
-            localStorage.setItem('user',JSON.stringify(user.data));
-            return user.data;
-        
+            const{basket,...user} = userDto.data;
+            if(basket) thunkAPI.dispatch(setBasket(basket));
+            localStorage.setItem('user',JSON.stringify(user));
+            return user;
         } catch (error) {
             const errorMessage = 'Failed to fetch current user';
             // Handle axios errors

@@ -107,11 +107,6 @@ export default function SignUp() {
     const password = document.getElementById('password') as HTMLInputElement;
     const name = document.getElementById('name') as HTMLInputElement;
 
-    console.log({
-      UserName: name.value,
-      Email: email.value,
-      Password: password.value
-    });
     if (isValid) {
       try {
         const response = await axios(`http://localhost:5000/register?UserName=${name.value}&Email=${email.value}&Password=${password.value}`,{
@@ -120,7 +115,7 @@ export default function SignUp() {
           }
         );
         if(response.status ===201){
-          toast.success("User successfully registered")
+          toast.success("Registration successful, you can now login.")
         }
         navigate('/login');
         return response.data;

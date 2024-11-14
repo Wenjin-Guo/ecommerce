@@ -3,6 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/configureStore";
 import { signOut } from "../../features/account/accountSlice";
+import { clearBasket } from "../../features/basket/basketSlice";
 
 export default function SignedInMenue(){
     const dispatch = useDispatch<AppDispatch>();
@@ -65,7 +66,10 @@ export default function SignedInMenue(){
             >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={()=>dispatch(signOut())}>Logout</MenuItem>
+                <MenuItem onClick={()=>{
+                    dispatch(signOut());
+                    dispatch(clearBasket());
+                }}>Logout</MenuItem>
             </Menu>
         </>
     );

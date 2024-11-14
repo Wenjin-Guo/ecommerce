@@ -98,6 +98,9 @@ export const basketSlice = createSlice({
             const itemIndex = state.basket?.items.findIndex(i=>i.productId === productId);
             if(itemIndex === -1 || itemIndex === undefined) return;
             state.basket!.items[itemIndex].quantity -= quantity;
+        },
+        clearBasket:(state)=>{
+          state.basket=null;
         }
     },
     extraReducers: (builder) => {
@@ -137,5 +140,5 @@ export const basketSlice = createSlice({
       }
 });
 
-export const{setBasket,removeItem} = basketSlice.actions;
+export const{setBasket,removeItem,clearBasket} = basketSlice.actions;
 export default basketSlice.reducer;
