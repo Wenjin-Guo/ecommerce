@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/configureStore";
-import { signOut } from "../../features/account/accountSlice";
+import {  signOut } from "../../features/account/accountSlice";
 import { clearBasket } from "../../features/basket/basketSlice";
 
 export default function SignedInMenue(){
@@ -15,6 +15,8 @@ export default function SignedInMenue(){
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const firstName = JSON.parse(localStorage.getItem('user')as string).firstName;
 
     return (
         <>
@@ -39,7 +41,7 @@ export default function SignedInMenue(){
                     width="100%"
                     sx={{ textTransform: 'capitalize',fontSize: 'inherit', }} // Capitalize first letter
                 >
-                    Hello, 
+                    Hello, {firstName?? ""}
                 </Typography>
                 <Typography
                     variant="body1"

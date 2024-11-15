@@ -85,6 +85,7 @@ namespace API.Controllers
             {
                 Email = user.Email,
                 Token = token,
+                FirstName = user.FirstName,
                 Basket = MapBasketToDto(userBasket)
             };
             return Ok(userDto);
@@ -119,6 +120,7 @@ namespace API.Controllers
             var userBasket = await RetrieveBasket(user.UserName);
             return new UserDto{
                 Email= user.Email,
+                FirstName = user.FirstName,
                 Token = await _tokenServices.GenerateToken(user),
                 Basket = MapBasketToDto(userBasket)
             };
