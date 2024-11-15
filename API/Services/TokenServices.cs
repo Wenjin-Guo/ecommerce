@@ -22,11 +22,11 @@ namespace API.Services
         }
 
         public async Task<string> GenerateToken(User user){
-            var claims = new List<Claim>{
-                new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty),
+            var claims = new List<Claim> {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
-            
+
             var roles = await _userManager.GetRolesAsync(user);
             foreach(var role in roles){
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -39,7 +39,7 @@ namespace API.Services
                 issuer:null,
                 audience: null,
                 claims: claims,
-                expires:DateTime.Now.AddHours(2),
+                expires:DateTime.Now.AddHours(7),
                 signingCredentials:creds
             );
 

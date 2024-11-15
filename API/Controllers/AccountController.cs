@@ -81,12 +81,13 @@ namespace API.Controllers
             await _storeContext.SaveChangesAsync();
 
             // Return user details along with the generated token
-            return new UserDto
+            var userDto = new UserDto
             {
                 Email = user.Email,
                 Token = token,
                 Basket = MapBasketToDto(userBasket)
             };
+            return Ok(userDto);
         }
 
         [HttpPost("register")]
@@ -114,7 +115,7 @@ namespace API.Controllers
         [Authorize]
         [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser(){
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var userBasket = await RetrieveBasket(user.UserName);
             return new UserDto{
                 Email= user.Email,
