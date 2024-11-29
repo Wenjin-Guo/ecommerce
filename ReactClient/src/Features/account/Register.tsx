@@ -53,14 +53,17 @@ export default function SignUp() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [firstNameError, setFirstNameError] = React.useState(false);
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+  const [lastNameError, setLastNameError] = React.useState(false);
+  const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
   const navigate = useNavigate();
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
+    const firstName = document.getElementById('firstName') as HTMLInputElement;
+    const lastName = document.getElementById('lastName') as HTMLInputElement;
 
     let isValid = true;
 
@@ -83,14 +86,23 @@ export default function SignUp() {
         setPasswordErrorMessage('');
     }
 
-    //userName should be alphabetic characters or alphabetic characters combined with numbers (and at least one character long)
-    if (!name.value || !/^[A-Za-z0-9]+$/.test(name.value)) {
-      setNameError(true);
-      setNameErrorMessage('Name is at least one character long and contains only letters and numbers.');
+    //name should be alphabetic characters or alphabetic characters combined with numbers (and at least one character long)
+    if (!firstName.value || !/^[A-Za-z0-9]+$/.test(firstName.value)) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage('Name is at least one character long and contains only letters and numbers.');
       isValid = false;
     } else {
-      setNameError(false);
-      setNameErrorMessage('');
+      setFirstNameError(false);
+      setFirstNameErrorMessage('');
+    }
+
+    if (!lastName.value || !/^[A-Za-z0-9]+$/.test(lastName.value)) {
+      setLastNameError(true);
+      setLastNameErrorMessage('Name is at least one character long and contains only letters and numbers.');
+      isValid = false;
+    } else {
+      setLastNameError(false);
+      setLastNameErrorMessage('');
     }
 
     return isValid;
@@ -105,11 +117,12 @@ export default function SignUp() {
 
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
+    const firstName = document.getElementById('firstName') as HTMLInputElement;
+    const lastName = document.getElementById('lastName') as HTMLInputElement;
 
     if (isValid) {
       try {
-        const response = await axios(`http://localhost:5000/register?UserName=${name.value}&Email=${email.value}&Password=${password.value}`,{
+        const response = await axios(`http://localhost:5000/register?FirstName=${firstName.value}&LastName=${lastName.value}&Email=${email.value}&Password=${password.value}`,{
             method:"post",
             withCredentials: true 
           }
@@ -160,17 +173,31 @@ export default function SignUp() {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
-              <FormLabel htmlFor="name">User name</FormLabel>
+              <FormLabel htmlFor="firstName">First Name</FormLabel>
               <TextField
-                autoComplete="name"
-                name="name"
+                autoComplete="firstName"
+                name="firstName"
                 required
                 fullWidth
-                id="name"
-                placeholder="Username"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
+                id="firstName"
+                placeholder="Enter your first name"
+                error={firstNameError}
+                helperText={firstNameErrorMessage}
+                color={firstNameError ? 'error' : 'primary'}
+                />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="lastName">Last Name</FormLabel>
+              <TextField
+                autoComplete="lastName"
+                name="lastName"
+                required
+                fullWidth
+                id="lastName"
+                placeholder="Enter your last name"
+                error={lastNameError}
+                helperText={lastNameErrorMessage}
+                color={lastNameError ? 'error' : 'primary'}
               />
             </FormControl>
             <FormControl>

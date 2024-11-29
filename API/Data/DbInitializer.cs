@@ -16,14 +16,17 @@ namespace API.Data
                 var user = new User{
                     UserName = "simon@test.com",
                     Email = "simon@test.com",
-                    FirstName = "Simon"
+                    FirstName = "Simon",
+                    LastName = "Guo"
                 };
                 await userManager.CreateAsync(user, "Qwe!234");
                 await userManager.AddToRoleAsync(user,"Member");
                 
                 var admin = new User{
                     UserName = "admin@test.com",
-                    Email = "admin@test.com"
+                    Email = "admin@test.com",
+                    FirstName = "Admin",
+                    LastName = "Test"
                 };
                 await userManager.CreateAsync(admin, "Qwe!234");
                 await userManager.AddToRolesAsync(admin, new[] { "Member", "Admin" });

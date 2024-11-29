@@ -94,7 +94,7 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterDto registerDto)
         {
-            var user = new User { UserName = registerDto.Email, Email = registerDto.Email ,FirstName = registerDto.UserName};
+            var user = new User { UserName = registerDto.Email, Email = registerDto.Email ,FirstName = registerDto.FirstName, LastName = registerDto.LastName};
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
