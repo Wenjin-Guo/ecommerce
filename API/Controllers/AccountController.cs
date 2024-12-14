@@ -61,6 +61,7 @@ namespace API.Controllers
                 CreateBasket(user);
             }
 
+            //transfter anonymous basket to username basketket
             if(anonBasket !=null){
                 if(userBasket !=null){
                     
@@ -70,7 +71,7 @@ namespace API.Controllers
                         //add item
                         userBasket.AddItem(product, item.Quantity);
                     }
-
+                    //remove the anonymous basket
                     _storeContext.Baskets.Remove(anonBasket);
                     Response.Cookies.Delete("buyerId");
                     
