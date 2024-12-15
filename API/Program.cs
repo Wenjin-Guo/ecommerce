@@ -56,7 +56,7 @@ builder.Services.AddIdentityCore<User>(opt=>{
     opt.Password.RequireUppercase = false;          // Require at least one uppercase letter
     opt.Password.RequireNonAlphanumeric = false;    // Require at least one special character
 })
-    .AddRoles<IdentityRole>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<StoreContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
