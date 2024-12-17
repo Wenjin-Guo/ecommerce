@@ -17,5 +17,6 @@ namespace API.Entities
 
         public int BasketId { get; set; }
         public Basket Basket { get; set; } = null!;
+        public bool IsSelected { get; set; }
     }
 }
