@@ -64,6 +64,7 @@ namespace API.Controllers
 
         private async Task<Basket> RetrieveBasket(string buyerId)
         {
+            //
             if(string.IsNullOrEmpty(buyerId)){
                 Response.Cookies.Delete("buyerId");
                 return null;
