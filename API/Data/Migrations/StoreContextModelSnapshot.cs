@@ -49,6 +49,9 @@ namespace API.Data.Migrations
                     b.Property<int>("BasketId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -279,9 +282,6 @@ namespace API.Data.Migrations
                     b.Property<string>("Address1")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Address2")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
@@ -443,9 +443,6 @@ namespace API.Data.Migrations
                                 .HasColumnType("int");
 
                             b1.Property<string>("Address1")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Address2")
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("City")

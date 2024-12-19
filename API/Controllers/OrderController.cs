@@ -54,7 +54,7 @@ namespace API.Controllers
             var items = new List<OrderItem>();
             foreach (var item in basket.Items)
             {
-                if(item.IsSelected == true){
+                /* if(item.IsSelected == true){ */
                     var productItem = await _context.Products.FindAsync(item.ProductId);
                     var itemOrdered = new ProductItemOrdered
                     {
@@ -70,7 +70,7 @@ namespace API.Controllers
                     };
                     items.Add(orderItem);
                     productItem.QuantityInStock -= item.Quantity;
-                }
+                /* } */
             }
 
             //subtotal and delivery fee

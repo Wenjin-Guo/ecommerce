@@ -79,7 +79,6 @@ namespace API.Data.Migrations
                     ShippingAddress_FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShippingAddress_LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShippingAddress_Address1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShippingAddress_Address2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShippingAddress_City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShippingAddress_Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShippingAddress_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -230,7 +229,6 @@ namespace API.Data.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -278,7 +276,8 @@ namespace API.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    BasketId = table.Column<int>(type: "int", nullable: false)
+                    BasketId = table.Column<int>(type: "int", nullable: false),
+                    IsSelected = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

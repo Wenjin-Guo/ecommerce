@@ -35,6 +35,11 @@ namespace API.Controllers
             if (user == null)
                 return NotFound("User not found.");
 
+            // Update other addresses to not be default
+            foreach (var address in user.Address)
+            {
+                address.IsDefault = false;
+            }
             // Add new address
             var newAddress = new UserAddress
             {
@@ -46,7 +51,7 @@ namespace API.Controllers
                 PostalCode = addressDto.PostalCode,
                 Country = addressDto.Country,
                 UserId = user.Id,
-                IsDefault = user.Address == null || !user.Address.Any() // First address is default
+                IsDefault = true
             };
 
             user.Address.Add(newAddress);
@@ -134,7 +139,6 @@ namespace API.Controllers
                 Province = address.Province,
                 PostalCode = address.PostalCode,
                 Country = address.Country,
-                IsDefault = address.IsDefault
             }).ToList();
 
             return Ok(addresses);
