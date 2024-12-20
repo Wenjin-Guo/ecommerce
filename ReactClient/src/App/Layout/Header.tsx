@@ -92,7 +92,9 @@ function Header({theme, toggleTheme}:Props){
   const account = useSelector((state:AppState)=>state.accountState);
   const basketState = useSelector((state:AppState)=>state.basketState);
 
-  const numOfItems = basketState.basket?.items.reduce((accumulator,currentValue)=>accumulator+currentValue.quantity,0);
+  const numOfItems = Array.isArray(basketState.basket?.items)
+    ? basketState.basket.items.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0)
+    : 0;
   
 
   return(
