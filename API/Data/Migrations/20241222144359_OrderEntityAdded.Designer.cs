@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20241219115650_OrderEntityAdded")]
+    [Migration("20241222144359_OrderEntityAdded")]
     partial class OrderEntityAdded
     {
         /// <inheritdoc />

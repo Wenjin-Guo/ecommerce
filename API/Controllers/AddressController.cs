@@ -57,16 +57,16 @@ namespace API.Controllers
             user.Address.Add(newAddress);
             await _context.SaveChangesAsync();
 
-            return Ok(newAddress);
+            return Ok("New address created as default address");
         }
 
         // 2. SetDefaultAddress: Set an address as the default for a user
         [HttpPut("SetDefaultAddress")]
-        public async Task<IActionResult> SetDefaultAddress(int userId, int addressId)
+        public async Task<IActionResult> SetDefaultAddress( int addressId)
         {
             // Find the user and include their addresses
             var user = await _context.Users.Include(u => u.Address)
-                                           .FirstOrDefaultAsync(u => u.Id == userId);
+                                           .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
             if (user == null)
                 return NotFound("User not found.");
@@ -142,6 +142,30 @@ namespace API.Controllers
             }).ToList();
 
             return Ok(addresses);
+        }
+
+        //5. GetDefaultAddress : Retrieve the default address for user
+        [HttpGet("GetDefaultAddress")]
+        public async Task<IActionResult> GetDefaultAddress()
+        {
+            // Find the default address from UserAddress
+            var defaultAddress = await _context.UserAddress
+                .FirstOrDefaultAsync(a=>a.User.UserName == User.Identity.Name && a.IsDefault);
+            
+            if(defaultAddress == null) return BadRequest("Default Address not found");
+
+            var addressDto = new AddressDto{
+                FirstName = defaultAddress.FirstName,
+                LastName = defaultAddress.LastName,
+                Address1 = defaultAddress.Address1,
+                City = defaultAddress.City,
+                Province = defaultAddress.Province,
+                PostalCode = defaultAddress.PostalCode,
+                Country = defaultAddress.Country
+            };
+            return Ok(addressDto);
+            
+            
         }
     }
 }

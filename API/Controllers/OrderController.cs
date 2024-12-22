@@ -24,7 +24,7 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetOrderList")]
         public async Task<ActionResult<List<Order>>> GetOrders(){
             return await _context.Orders
                 .Include(o=>o.OrderItems)
@@ -40,8 +40,8 @@ namespace API.Controllers
                 .FirstOrDefaultAsync();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<int>> CreateOrder(CreateOrderDto createOrderDto){
+        [HttpPost("CreateOrder")]
+        public async Task<ActionResult<int>> CreateOrder(){
             //get basket
             var basket = await _context.Baskets
                 .RetrieveBasketWithItems(User.Identity.Name)
@@ -78,22 +78,32 @@ namespace API.Controllers
             var deliveryFee = subtotal > 70 ? 0:20;
 
             //find the user and the default address
-            var user = await _context.Users.FirstOrDefaultAsync(x=>x.UserName == User.Identity.Name);
-            var address = user.Address.FirstOrDefault(a=>a.IsDefault);
-            if(address ==null) return BadRequest(new ProblemDetails{Title="Could not find default address"});
+            var user = await _context.Users
+                .Include(u => u.Address) // Load Address navigation property
+                .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            var userAddress = user.Address.FirstOrDefault(a=>a.IsDefault);
+            if(userAddress ==null) return BadRequest(new ProblemDetails{Title="Could not find default address"});
             
+
             //create order
             var order = new Order{
                 OrderItems = items,
                 BuyerId = User.Identity.Name,
-                ShippingAddress = createOrderDto.ShippingAddress,
+                ShippingAddress = new ShippingAddress{
+                    FirstName = userAddress.FirstName,
+                    LastName = userAddress.LastName,
+                    Address1 = userAddress.Address1,
+                    City = userAddress.City,
+                    Province = userAddress.Province,
+                    PostalCode = userAddress.PostalCode,
+                    Country = userAddress.Country
+                },
                 Subtotal = subtotal,
                 DeliveryFee = deliveryFee
             };
 
             //tracking
             _context.Orders.Add(order);
-            _context.Update(order);
             var result = await _context.SaveChangesAsync()>0;
             
             if(result) return CreatedAtRoute("GetOrder",new{id=order.Id},order.Id);
