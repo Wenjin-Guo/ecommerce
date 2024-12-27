@@ -1,4 +1,4 @@
-import { Box, Button, Grid2, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,9 +85,9 @@ export function BasketPage(){
                 </TableBody>
             </Table>
         </TableContainer>
-        <Grid2 container>
-            <Grid2 size={6}></Grid2>
-            <Grid2 size={6}>
+        <Grid container>
+            <Grid item xs={12} sm={6}></Grid>
+            <Grid item xs={12} sm={6}>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableBody>
@@ -123,8 +123,8 @@ export function BasketPage(){
                         fullWidth>
                             Checkout
                     </Button>
-            </Grid2>
-        </Grid2>
+            </Grid>
+        </Grid>
         
 
 

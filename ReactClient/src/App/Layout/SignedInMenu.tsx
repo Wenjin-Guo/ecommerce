@@ -1,11 +1,15 @@
-import { Button, Menu, MenuItem, Typography } from "@mui/material";
+import { Button, IconButton, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/configureStore";
 import {  signOut } from "../../features/account/accountSlice";
 import { clearBasket } from "../../features/basket/basketSlice";
+import { Dehaze } from "@mui/icons-material";
+
+
 
 export default function SignedInMenue(){
+    const theme = useTheme(); // Retrieve the theme object
     const dispatch = useDispatch<AppDispatch>();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -18,7 +22,39 @@ export default function SignedInMenue(){
 
     const firstName = JSON.parse(localStorage.getItem('user')as string).firstName;
 
-    return (
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // Adjust based on your requirement (e.g., "sm" for small screens)
+
+    return isSmallScreen?(
+        <><IconButton onClick={handleClick} size="large" edge='start' color="inherit" 
+                sx={{ 
+                    mr: 0, 
+                    '&:hover': { backgroundColor: 'primary.dark' },
+                    '&.active':{color:'primary.dark'} 
+                    }}>
+                <Dehaze/>
+            </IconButton>
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={() => {
+                    dispatch(signOut());
+                    dispatch(clearBasket());
+                } }>Logout</MenuItem>
+            </Menu>
+        </>
+        ):(
         <>
             <Button
                 onClick={handleClick}

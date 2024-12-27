@@ -98,10 +98,11 @@ function Header({theme, toggleTheme}:Props){
   
 
   return(
-      <AppBar position="static" sx={{mb:4}}>
-          <Toolbar sx={{display:'flex',alignItems:'center'}}>
+    
+      <AppBar position="static" sx={{ mb:4}}>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box display='flex' alignItems='center'>  
               
-              <Box display={"flex"} alignItems={'center'} flexGrow={1}>
                   <Typography variant="h5" component={NavLink} to='/' sx={navStyle}>
                       Ecommerce
                   </Typography>
@@ -113,8 +114,8 @@ function Header({theme, toggleTheme}:Props){
                       control={<MaterialUISwitch sx={{ m: 1 }} />}
                       label=""
                   />
-
-                  <List sx={{ display: 'flex' }}>
+            </Box>
+                  <List sx={{ display:'flex' }}>
                       {midLinks.map(({ title, path }) => (
                           <ListItem
                               component={NavLink}
@@ -125,12 +126,10 @@ function Header({theme, toggleTheme}:Props){
                               {title.toUpperCase()}
                           </ListItem>
                       ))}
-                  </List>
-              </Box>    
+                  </List>  
 
                 
-              
-              <Box display={"flex"} alignItems={'center'}>
+                <Box display='flex' alignItems='center'>
                   <IconButton component={Link} to='/basket' size="large" edge='start' color="inherit" 
                       sx={{ 
                           mr: 2, 
@@ -156,9 +155,8 @@ function Header({theme, toggleTheme}:Props){
                           </ListItem>
                       ))}
                   </List>
-                  )}
-              </Box>        
-              
+                  )}      
+                </Box>
           </Toolbar>
       </AppBar>
   )
