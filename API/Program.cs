@@ -95,7 +95,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(opt=>{
-    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000","http://192.168.2.14:3000");
 });
 
 
@@ -118,6 +118,7 @@ catch (Exception ex)
     
     logger.LogError(ex,"A problem occurred during migration");
 };
+app.Urls.Add("http://192.168.2.14:5000/");
 
 app.Run();
 

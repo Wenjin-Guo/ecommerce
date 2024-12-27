@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Basket } from "../../app/models/basket";
 import axios from "axios";
 import { getCookie } from "../../app/util/util";
+import agent from "../../app/api/agent";
 
 interface BasketState{
     basket:Basket|null,
@@ -20,29 +21,9 @@ const initialState: BasketState = {
 export const fetchBasketAsync = createAsyncThunk<Basket>(
   'basket/fetchBasket',
   async (_,thunkAPI) => {
-    
-    const user = localStorage.getItem('user');
-      let token = null;
-
-      // Check if a token exists in localStorage and parse it
-      if (user) {
-        try {
-          token = JSON.parse(user).token;
-        } catch (e) {
-          console.error("Error parsing the user object:", e);
-        }
-      }
-
-      // Set the Authorization header if token exists
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-
     try {
-      const response = await axios('http://localhost:5000/api/Basket', {
-        method: "get",
-        headers:headers,
-        withCredentials: true
-      });
-      return response.data;
+      const response = await agent.Basket.get();
+      return response;
     } catch (error) {
       const errorMessage = 'Failed to fetch the basket';
       // Handle axios errors
@@ -64,29 +45,9 @@ export const fetchBasketAsync = createAsyncThunk<Basket>(
 export const addBasketItemsAsync = createAsyncThunk<Basket,{productId:number,quantity:number}>(
     'basket/addBasketItemsAsync',
     async({productId,quantity}, thunkAPI)=>{
-
-      const user = localStorage.getItem('user');
-      let token = null;
-
-      // Check if a token exists in localStorage and parse it
-      if (user) {
-        try {
-          token = JSON.parse(user).token;
-        } catch (e) {
-          console.error("Error parsing the user object:", e);
-        }
-      }
-
-      // Set the Authorization header if token exists
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-
       try {
-        const response = await axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
-          method:"post",
-          headers:headers,
-          withCredentials: true 
-        });
-        return response.data;
+        const response = await agent.Basket.addItem(productId,quantity);
+        return response;
       } catch (error) {
         const errorMessage = 'Failed to add the item';
         // Handle axios errors
@@ -102,28 +63,9 @@ export const addBasketItemsAsync = createAsyncThunk<Basket,{productId:number,qua
 export const deleteBasketItemsAsync = createAsyncThunk<void,{productId:number,quantity:number}>(
     'basket/deleteBasketItemsAsync', 
     async({productId, quantity},thunkAPI)=>{
-      const user = localStorage.getItem('user');
-      let token = null;
-
-      // Check if a token exists in localStorage and parse it
-      if (user) {
-        try {
-          token = JSON.parse(user).token;
-        } catch (e) {
-          console.error("Error parsing the user object:", e);
-        }
-      }
-
-      // Set the Authorization header if token exists
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-
       try {
-        const response = await axios(`http://localhost:5000/api/Basket?productId=${productId}&quantity=${quantity}`,{ 
-          method:"delete",
-          headers:headers,
-          withCredentials: true 
-        });
-        return response.data;
+        const response = await agent.Basket.removeItem(productId,quantity);
+        return response;
       } catch (error) {
         const errorMessage = 'Failed to delete the item';
         // Handle axios errors

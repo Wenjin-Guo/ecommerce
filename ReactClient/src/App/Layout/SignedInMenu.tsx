@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/configureStore";
 import {  signOut } from "../../features/account/accountSlice";
 import { clearBasket } from "../../features/basket/basketSlice";
-import { Dehaze } from "@mui/icons-material";
+import { Person } from "@mui/icons-material";
 
 
 
@@ -31,7 +31,7 @@ export default function SignedInMenue(){
                     '&:hover': { backgroundColor: 'primary.dark' },
                     '&.active':{color:'primary.dark'} 
                     }}>
-                <Dehaze/>
+                <Person/>
             </IconButton>
             <Menu
                 anchorEl={anchorEl}

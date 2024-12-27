@@ -3,6 +3,7 @@ import { User } from "../../app/models/user";
 import axios from "axios";
 import { router } from "../../app/router/Routes";
 import { setBasket } from "../basket/basketSlice";
+import agent from "../../app/api/agent";
 
 interface AccountState{
     user:User | null
@@ -18,13 +19,10 @@ const initialState: AccountState= {
 
 export const signInUser = createAsyncThunk<User,{email:string,password:string}>(
     'account/signInUser',
-    async({email,password},thunkAPI)=>{
+    async(data,thunkAPI)=>{
         try {
-            const userDto = await axios(`http://localhost:5000/login?Email=${email}&Password=${password}`, {
-                method:"post",
-                withCredentials: true 
-            });
-            const{basket,...user} = userDto.data;
+            const userDto = await agent.Account.login(data);
+            const{basket,...user} = userDto;
             if(basket) thunkAPI.dispatch(setBasket(basket));
             localStorage.setItem('user',JSON.stringify(user));
             return userDto.data;
@@ -39,7 +37,7 @@ export const signInUser = createAsyncThunk<User,{email:string,password:string}>(
 )
 
 export const fetchCurrentUser = createAsyncThunk<User>(
-    'account/fetchCurrentUser',
+    'account/fetchCurrentUser', 
     async(_,thunkAPI)=>{
         try {
             // Get the token from localStorage
@@ -49,14 +47,8 @@ export const fetchCurrentUser = createAsyncThunk<User>(
             if (!token) {
                 return thunkAPI.rejectWithValue('No token found, please login again.');
             }
-            const userDto = await axios(`http://localhost:5000/currentUser`, {
-                method:"get",
-                headers: {
-                    Authorization: `Bearer ${token}`, // Add Bearer token to the Authorization header
-                  },
-                withCredentials: true 
-            });
-            const{basket,...user} = userDto.data;
+            const userDto = await agent.Account.currentUser();
+            const{basket,...user} = userDto;
             if(basket) thunkAPI.dispatch(setBasket(basket));
             localStorage.setItem('user',JSON.stringify(user));
             return user;

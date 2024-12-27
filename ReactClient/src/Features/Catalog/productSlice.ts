@@ -2,32 +2,37 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import axios from "axios";
 import { AppState } from "../../app/store/configureStore";
 import { Product } from "../../app/models/product";
+import agent from "../../app/api/agent";
 
 const productAdapter = createEntityAdapter<Product>();
 
 export const fetchProductsAsync = createAsyncThunk<Product[]>('products/fetchProducts',async(_,thunkAPI)=>{
     try {
-        const response = await axios('http://localhost:5000/api/products',{
-            method:"get",
-            withCredentials: true
-        });
-        return response.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
-        return thunkAPI.rejectWithValue({ error:error.data })
+        const response = await agent.Catalog.list();
+        return response;
+    } catch (error) {
+        const errorMessage = 'Failed to fetch the products';
+      // Handle axios errors
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(errorMessage);
+      }
+      // Handle non-Axios errors (e.g., network issues)
+      return thunkAPI.rejectWithValue(errorMessage);
     }
 });
 
 export const fetchSingleProductAsync = createAsyncThunk<Product,number>('products/fetchSingleProduct',async(productId,thunkAPI)=>{
     try {
-        const response = await axios(`http://localhost:5000/api/products/${productId}`,{
-            method:"get",
-            withCredentials: true
-        });
-        return response.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
-        return thunkAPI.rejectWithValue({error:error.data})
+        const response = await agent.Catalog.details(productId);
+        return response;
+    } catch (error) {
+        const errorMessage = 'Failed to fetch the product detail';
+      // Handle axios errors
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(errorMessage);
+      }
+      // Handle non-Axios errors (e.g., network issues)
+      return thunkAPI.rejectWithValue(errorMessage);
     }
 });
 

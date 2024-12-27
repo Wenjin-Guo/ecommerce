@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
     public class AddressController : ControllerBase
     {
         private readonly StoreContext _context;
@@ -22,7 +24,7 @@ namespace API.Controllers
         }
 
         // 1. CreateAddress: Add an address for a specific user
-        [HttpPost("CreateAddress")]
+        [HttpPost(Name ="CreateAddress")]
         public async Task<IActionResult> CreateAddress( AddressDto addressDto)
         {
             // Validate input
@@ -61,7 +63,7 @@ namespace API.Controllers
         }
 
         // 2. SetDefaultAddress: Set an address as the default for a user
-        [HttpPut("SetDefaultAddress")]
+        [HttpPut(Name ="SetDefaultAddress")]
         public async Task<IActionResult> SetDefaultAddress( int addressId)
         {
             // Find the user and include their addresses
@@ -89,7 +91,7 @@ namespace API.Controllers
         }
 
         // 3. DeleteAddress: Delete a specific address
-        [HttpDelete("DeleteAddress")]
+        [HttpDelete(Name ="DeleteAddress")]
         public async Task<IActionResult> DeleteAddress(int addressId)
         {
             // Find the user and include their addresses

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class AccountController:ControllerBase
     {
         private readonly UserManager<User> _userManager;
