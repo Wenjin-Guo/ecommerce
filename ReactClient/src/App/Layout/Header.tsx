@@ -1,10 +1,13 @@
 
-import { ShoppingBag } from "@mui/icons-material";
-import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  styled,  Switch, Toolbar, Typography } from "@mui/material";
+import { ShoppingBag, TableRows } from "@mui/icons-material";
+import { AppBar, Badge, Box, FormControlLabel, IconButton, List, ListItem,  Menu,  MenuItem,  Stack,  styled,  Switch, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import {  Link, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import {  AppState } from "../store/configureStore";
+import { useDispatch, useSelector } from "react-redux";
+import {  AppDispatch, AppState } from "../store/configureStore";
 import SignedInMenue from "./SignedInMenu";
+import React from "react";
+import { signOut } from "../../features/account/accountSlice";
+import { clearBasket } from "../../features/basket/basketSlice";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
@@ -80,7 +83,6 @@ const navStyle = {
     color: 'inherit',
     '&.active': { fontWeight: 'bold',color:'info.dark' },
     '&:hover': { backgroundColor:'primary.dark'},
-    
 };
 
 interface Props{
@@ -89,6 +91,8 @@ interface Props{
 }
 
 function Header({theme, toggleTheme}:Props){
+  const themeSetting = useTheme(); // Retrieve the theme object
+  const dispatch = useDispatch<AppDispatch>();
   const account = useSelector((state:AppState)=>state.accountState);
   const basketState = useSelector((state:AppState)=>state.basketState);
 
@@ -96,13 +100,83 @@ function Header({theme, toggleTheme}:Props){
     ? basketState.basket.items.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0)
     : 0;
   
-
-  return(
-    
-      <AppBar position="static" sx={{ mb:4}}>
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box display='flex' alignItems='center'>  
-              
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+      const open = Boolean(anchorEl);
+      const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+          setAnchorEl(event.currentTarget);
+      };
+      const handleClose = () => {
+          setAnchorEl(null);
+      };
+      
+  const isSmallScreen = useMediaQuery(themeSetting.breakpoints.down("sm")); // Adjust based on your requirement (e.g., "sm" for small screens)
+  return isSmallScreen?(
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" sx={{mb:2}}>
+        <Toolbar variant="dense" >
+        <IconButton onClick={handleClick} size="small" edge='start' color="inherit" 
+                  sx={{ 
+                      mr: 1, 
+                      '&:hover': { backgroundColor: 'primary.dark' },
+                      '&.active':{color:'primary.dark'}, 
+                      }}>
+              <TableRows />
+        </IconButton>
+        <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+        >
+            <MenuItem component={NavLink} to='/catalog' onClick={handleClose}>Catalog</MenuItem>
+            <MenuItem component={NavLink} to='/about' onClick={handleClose}>About</MenuItem>
+            <MenuItem component={NavLink} to='/contact' onClick={handleClose}>Contact</MenuItem>
+            <MenuItem component={NavLink} to='/login' onClick={handleClose}>Login</MenuItem>
+            <MenuItem component={NavLink} to='/register' onClick={handleClose}>Register</MenuItem>
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={() => {
+                dispatch(signOut());
+                dispatch(clearBasket());
+                handleClose();
+            } }>Logout</MenuItem>
+        </Menu>
+        <Stack alignItems="center" direction="row" sx={{flexGrow:1}}>
+          <Typography variant="h5" component={NavLink} to='/' sx={navStyle}>
+            Ecommerce
+          </Typography>
+          <FormControlLabel
+            checked={theme === 'light' ? false : true}
+            onClick={toggleTheme}
+            control={<MaterialUISwitch sx={{ m: 1 ,transform:"scale(0.8)"}} />}
+            label=""
+          />
+        </Stack>
+        <IconButton component={Link} to='/basket' size="small" edge='start' color="inherit"
+          sx={{
+            mr: 0,
+            '&:hover': { backgroundColor: 'primary.dark' },
+            '&.active': { color: 'primary.dark' }
+          }}>
+          <Badge badgeContent={numOfItems} color="secondary" >
+            <ShoppingBag />
+          </Badge>
+        </IconButton>
+      </Toolbar>
+      </AppBar>
+    </Box>
+    ):(
+      <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" sx={{mb:4}}>
+          <Toolbar >
+              <Stack  alignItems={'center'} flexGrow={1} direction={'row'}>
                   <Typography variant="h5" component={NavLink} to='/' sx={navStyle}>
                       Ecommerce
                   </Typography>
@@ -114,8 +188,8 @@ function Header({theme, toggleTheme}:Props){
                       control={<MaterialUISwitch sx={{ m: 1 }} />}
                       label=""
                   />
-            </Box>
-                  <List sx={{ display:'flex' }}>
+
+                  <List sx={{ display: 'flex' }}>
                       {midLinks.map(({ title, path }) => (
                           <ListItem
                               component={NavLink}
@@ -126,10 +200,12 @@ function Header({theme, toggleTheme}:Props){
                               {title.toUpperCase()}
                           </ListItem>
                       ))}
-                  </List>  
+                  </List>
+              </Stack>    
 
                 
-                <Box display='flex' alignItems='center'>
+              
+              <Stack alignItems={'center'} direction={'row'}>
                   <IconButton component={Link} to='/basket' size="large" edge='start' color="inherit" 
                       sx={{ 
                           mr: 2, 
@@ -155,10 +231,12 @@ function Header({theme, toggleTheme}:Props){
                           </ListItem>
                       ))}
                   </List>
-                  )}      
-                </Box>
+                  )}
+              </Stack>        
+              
           </Toolbar>
       </AppBar>
+    </Box>
   )
 }
 

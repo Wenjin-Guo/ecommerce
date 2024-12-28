@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import { Outlet } from 'react-router-dom';
@@ -11,17 +11,20 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/configureStore';
 import { fetchBasketAsync } from '../../features/basket/basketSlice';
 
-const lightTheme = createTheme({
+let lightTheme = createTheme({
   palette: {
     mode: 'light',
   },
 });
 
-const darkTheme = createTheme({
+let darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
 });
+
+lightTheme = responsiveFontSizes(lightTheme);
+darkTheme = responsiveFontSizes(darkTheme);
 
 function App() {
 
@@ -52,8 +55,8 @@ function App() {
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
-        <Header theme={theme} toggleTheme={toggleTheme} />
-      <Container >
+      <Header theme={theme} toggleTheme={toggleTheme} />
+      <Container sx={{overflow:'visible', width:'100%',height:'auto'}}>
         <Outlet />
       </Container>
       <ToastContainer

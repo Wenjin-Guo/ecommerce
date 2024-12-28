@@ -107,6 +107,7 @@ export default function SignedInMenue(){
                 <MenuItem onClick={()=>{
                     dispatch(signOut());
                     dispatch(clearBasket());
+                    handleClose();
                 }}>Logout</MenuItem>
             </Menu>
         </>
