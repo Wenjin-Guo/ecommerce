@@ -36,9 +36,10 @@ function App() {
   
 
   useEffect(() => {
+    localStorage.setItem('theme', theme);
       dispatch(fetchCurrentUser());
       dispatch(fetchBasketAsync());
-  }, [dispatch])
+  }, [dispatch,theme])
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
