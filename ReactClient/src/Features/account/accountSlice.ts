@@ -3,7 +3,7 @@ import { User } from "../../app/models/user";
 import axios from "axios";
 import { router } from "../../app/router/Routes";
 import { setBasket } from "../basket/basketSlice";
-import agent from "../../app/api/agent";
+import { API_URLS } from "../../app/api/apiURLs";
 
 interface AccountState{
     user:User | null
@@ -19,10 +19,10 @@ const initialState: AccountState= {
 
 export const signInUser = createAsyncThunk<User,{email:string,password:string}>(
     'account/signInUser',
-    async(data,thunkAPI)=>{
+    async({email,password},thunkAPI)=>{
         try {
-            const userDto = await agent.Account.login(data);
-            const{basket,...user} = userDto;
+            const userDto = await axios.post(API_URLS.login,{email,password});
+            const{basket,...user} = userDto.data;
             if(basket) thunkAPI.dispatch(setBasket(basket));
             localStorage.setItem('user',JSON.stringify(user));
             return userDto.data;
@@ -36,8 +36,9 @@ export const signInUser = createAsyncThunk<User,{email:string,password:string}>(
     }
 )
 
+
 export const fetchCurrentUser = createAsyncThunk<User>(
-    'account/fetchCurrentUser', 
+    'account/fetchCurrentUser',
     async(_,thunkAPI)=>{
         try {
             // Get the token from localStorage
@@ -47,8 +48,14 @@ export const fetchCurrentUser = createAsyncThunk<User>(
             if (!token) {
                 return thunkAPI.rejectWithValue('No token found, please login again.');
             }
-            const userDto = await agent.Account.currentUser();
-            const{basket,...user} = userDto;
+            const userDto = await axios(API_URLS.currentUser, {
+                method:"get",
+                headers: {
+                    Authorization: `Bearer ${token}`, // Add Bearer token to the Authorization header
+                  },
+                withCredentials: true 
+            });
+            const{basket,...user} = userDto.data;
             if(basket) thunkAPI.dispatch(setBasket(basket));
             localStorage.setItem('user',JSON.stringify(user));
             return user;
@@ -63,7 +70,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
                 }
             }
             // Handle non-Axios errors (e.g., network issues)
-            return thunkAPI.rejectWithValue(errorMessage);
+            return thunkAPI.rejectWithValue(error);
         }
     },
     {
@@ -82,7 +89,10 @@ export const accountSlice = createSlice({
             state.status='idle';
             localStorage.removeItem('user');
             router.navigate('/');
-        }
+        },
+        setUser:(state,action)=>{
+            state.user = action.payload
+        },
     },
     extraReducers:(builder=>{
         builder.addMatcher(
@@ -104,8 +114,9 @@ export const accountSlice = createSlice({
                 //console.log(action.payload)
             }
         )
+        
     })
 });
 
-export const{signOut} = accountSlice.actions;
+export const{signOut,setUser} = accountSlice.actions;
 export default accountSlice.reducer;

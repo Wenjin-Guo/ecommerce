@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect} from 'react';
 import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
@@ -33,18 +33,12 @@ function App() {
   // Set initial theme based on localStorage
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-  const initApp = useCallback(async () => {
-    try {
-      await dispatch(fetchCurrentUser());
-      await dispatch(fetchBasketAsync());
-    } catch (error) {
-      console.log(error);
-    }
-  }, [dispatch]);
+  
 
   useEffect(() => {
-    initApp();
-  }, [initApp])
+      dispatch(fetchCurrentUser());
+      dispatch(fetchBasketAsync());
+  }, [dispatch])
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -56,7 +50,7 @@ function App() {
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <CssBaseline />
       <Header theme={theme} toggleTheme={toggleTheme} />
-      <Container sx={{overflow:'visible', width:'100%',height:'auto'}}>
+      <Container >
         <Outlet />
       </Container>
       <ToastContainer

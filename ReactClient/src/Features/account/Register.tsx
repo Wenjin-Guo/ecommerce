@@ -17,6 +17,8 @@ import { GoogleIcon, FacebookIcon} from './CustomIcons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { API_URLS } from '../../app/api/apiURLs';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -47,6 +49,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
     },
     
   }));
+
 
 export default function SignUp() {
   const [emailError, setEmailError] = React.useState(false);
@@ -115,23 +118,22 @@ export default function SignUp() {
 
     if (!isValid) return;
 
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-    const firstName = document.getElementById('firstName') as HTMLInputElement;
-    const lastName = document.getElementById('lastName') as HTMLInputElement;
+    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const password = (document.getElementById('password') as HTMLInputElement).value;
+    const firstName = (document.getElementById('firstName') as HTMLInputElement).value;
+    const lastName = (document.getElementById('lastName') as HTMLInputElement).value;
 
     if (isValid) {
       try {
-        const response = await axios(`http://localhost:5000/register?FirstName=${firstName.value}&LastName=${lastName.value}&Email=${email.value}&Password=${password.value}`,{
-            method:"post",
-            withCredentials: true 
+        const response = await axios.post(API_URLS.register,{email,password,firstName,lastName},{
+          headers:{
+            'Content-Type': 'application/json',
           }
-        );
-        if(response.status ===201){
+        });
+      if(response.status ===201){
           toast.success("Registration successful, you can now login.")
         }
         navigate('/login');
-        return response.data;
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           // Directly display the API's error message(s)
