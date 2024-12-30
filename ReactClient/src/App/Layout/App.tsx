@@ -11,15 +11,45 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/configureStore';
 import { fetchBasketAsync } from '../../features/basket/basketSlice';
 
+// Augment the palette to include an ochre color
+declare module '@mui/material/styles' {
+  interface Palette {
+    ochre: Palette['primary'];
+  }
+
+  interface PaletteOptions {
+    ochre?: PaletteOptions['primary'];
+  }
+}
+
+// Update the Button's color options to include an ochre option
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    ochre: true;
+  }
+}
+
 let lightTheme = createTheme({
   palette: {
     mode: 'light',
+    ochre: {
+      main: '#E3D026',
+      light: '#E9DB5D',
+      dark: '#A29415',
+      contrastText: '#242105',
+    },
   },
 });
 
 let darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    ochre: {
+      main: '#E3D026',
+      light: '#E9DB5D',
+      dark: '#A29415',
+      contrastText: '#242105',
+    },
   },
 });
 

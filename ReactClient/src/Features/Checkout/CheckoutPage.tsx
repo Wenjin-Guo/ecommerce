@@ -1,13 +1,39 @@
-import { Button, Card, CardContent,  Grid, Typography } from "@mui/material";
+import { Box, Button, CardContent,  Divider,  Grid, styled, Typography, useMediaQuery, useTheme } from "@mui/material";
+import MuiCard from '@mui/material/Card';
 import { useSelector } from "react-redux";
 import { AppState } from "../../app/store/configureStore";
+import CheckoutItem from "./CheckoutItem";
+import OrderSummaryCard from "./OrderSummaryCardContent";
+
+const Card = styled(MuiCard)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'center',
+    width: '100%',
+    gap: theme.spacing(2),
+    margin: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing(2),
+      
+    },
+    boxShadow:
+      'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
+    ...theme.applyStyles('dark', {
+      boxShadow:
+        'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+    }),
+}));
 
 export default function CheckoutPage(){
     //set default is not logged in
     let isLoggedIn = false;
 
-    //check user if logged in
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen size is small
     
+    
+    const basket = useSelector((state:AppState)=>state.basketState.basket);
+
     const result = useSelector((state:AppState)=> state.accountState.status);
     if(result=="succeeded"){
         isLoggedIn = true;
@@ -24,24 +50,30 @@ export default function CheckoutPage(){
                 margin: "0 auto", // Center the grid layout
             }}
         >
-            <Grid xs={12} sm={9}>
+            <Grid xs={12} sm={12} md={9} lg={9} order={{ xs: 2, md: 1 }}>
                 <Card
                     sx={{
-                        height: "100px",
                         display: "flex",
                         fontWeight: "bold",
-                        fontSize: "1.5rem",
                         position: 'relative',
                         marginBottom: 2, 
                     }}
                 >
-                    <CardContent >
-                        <Typography gutterBottom variant="h6" component="div">
-                            Delivering to Simon XXX
-                        </Typography>
-                        <Button color="primary" size="small"  sx={{position:"absolute", top:13, right:8}}>
-                            Change
-                        </Button>
+                    <CardContent>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography gutterBottom variant="h6" component="div">
+                                Delivering to Simon XXX
+                            </Typography>
+                            <Button variant="outlined" color="primary" size="small">
+                                Change
+                            </Button>
+                        </Box>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                             Lizards are a widespread group of squamate reptiles, with over 6,000
                             species, ranging across all continents except Antarctica
@@ -50,50 +82,70 @@ export default function CheckoutPage(){
                 </Card>
                 <Card
                     sx={{
-                        height: "80px",
                         display: "flex",
                         fontWeight: "bold",
-                        fontSize: "1.5rem",
                         position: 'relative',
                         marginBottom: 2, 
                     }}
                 >
                     <CardContent >
-                        <Typography gutterBottom variant="h6" component="div">
-                            Paying with MasterCard 0880
-                        </Typography>
-                        <Button color="primary" size="small"  sx={{position:"absolute", top:13, right:8}}>
-                            Change
-                        </Button>
-                        
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography gutterBottom variant="h6" component="div">
+                                Paying with MasterCard 0880
+                            </Typography>
+                            <Button variant="outlined" color="primary" size="small">
+                                Change
+                            </Button>
+                        </Box>
                     </CardContent>
                 </Card>
                 <Card
                     sx={{
                         display: "flex",
                         fontWeight: "bold",
-                        fontSize: "1.5rem",
                         marginBottom: 2, 
+                        padding:0
                     }}
                 >
-                    3
+                    {basket?.items.map(item=>
+                                (
+                                    
+                                    <CheckoutItem item={item} />
+                                    
+                                ))}
                 </Card>
             </Grid>
             
-            <Grid xs={12} sm={3}>
+            <Grid xs={12} sm={12} md={3} lg={3} order={{ xs: 1, md: 2 }}>
                 <Card
                     sx={{
-                        height: "33.33vh",
                         display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontWeight: "bold",
-                        fontSize: "1.5rem",
-                        marginLeft: 2, 
+                        marginLeft: isSmallScreen ? 0 : 2, // Conditional margin
+                        marginRight: isSmallScreen ? 2 : 0, // Conditional margin
+                        marginBottom:2
                     }}
                 >
-                    4
+                    <CardContent>
+                        <Box sx={{
+                            marginBottom: 1, display: "flex", flexGrow: 1, justifyContent: "center", // Centers horizontally
+                            alignItems: "center",
+                        }}>
+                            <Button variant="contained" color="ochre">Place your order</Button>
+                        </Box>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: "0.7rem", marginBottom: 2 }}>By placing your order, you agree to XXX's privacy notice and conditions of use.</Typography>
+                        <Divider />
+                        <OrderSummaryCard />
+                    </CardContent>
+                    
+                   
                 </Card>
+                
             </Grid>
             
         </Grid>
