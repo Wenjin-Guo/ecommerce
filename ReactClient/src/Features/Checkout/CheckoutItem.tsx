@@ -3,6 +3,9 @@ import { CardActions, CardContent, CardHeader, CardMedia, styled, Typography } f
 import MuiCard from '@mui/material/Card';
 import { useState } from "react";
 import { BasketItem } from "../../app/models/basket";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store/configureStore";
+import { addBasketItemsAsync, deleteBasketItemsAsync } from "../basket/basketSlice";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -31,12 +34,19 @@ interface Props{
 export default function CheckoutItem({item}:Props){
     const [loading, setLoading] = useState(false);
     
-    //const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch<AppDispatch>();
+    /* const basket = useSelector((state:AppState)=>state.basketState.basket); */
 
-    /* function handleAddItem(productId:number){
+
+    function handleAddItem(productId:number){
         setLoading(true);
         dispatch(addBasketItemsAsync({productId:productId,quantity:1}))
-    } */
+    }
+
+    function handleDeleteItem(productId:number){
+        setLoading(true);
+        dispatch(deleteBasketItemsAsync({productId:productId,quantity:1}))
+    }
 
     return <Card >
         <CardHeader
@@ -57,19 +67,22 @@ export default function CheckoutItem({item}:Props){
             <Typography variant="body2" color="text.secondary">
                 {item.brand} / {item.type}
             </Typography>
+            
         </CardContent>
         <CardActions>
-            
             <LoadingButton loading={loading}
                 onClick={() => {
+                    handleAddItem(item.productId)
                     setTimeout(() => {
                         setLoading(false)
                     }, 500);
                 }}
                 variant="contained" size="small">+</LoadingButton> 
-             number
+            <Typography>{item.quantity}</Typography>
+                
             <LoadingButton loading={loading}
                 onClick={() => {
+                    handleDeleteItem(item.productId)
                     setTimeout(() => {
                         setLoading(false)
                     }, 500);

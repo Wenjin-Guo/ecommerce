@@ -139,7 +139,7 @@ export default function CheckoutPage(){
                         }}>
                             <Button variant="contained" color="ochre">Place your order</Button>
                         </Box>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: "0.7rem", marginBottom: 2 }}>By placing your order, you agree to XXX's privacy notice and conditions of use.</Typography>
+                        <Typography variant="body2" sx={{ fontSize: "0.6rem", marginBottom: 2 }}>By placing your order, you agree to XXX's privacy notice and conditions of use.</Typography>
                         <Divider />
                         <OrderSummaryCard />
                     </CardContent>
