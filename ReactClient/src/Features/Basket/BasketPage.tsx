@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Add, DeleteForever, Remove } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,9 @@ import { useEffect } from "react";
 export function BasketPage(){
 
     const TAX_RATE = 0.13;
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen size is small
+
 
     function ccyFormat(num: number) {
         return `${num.toFixed(2)}`;
@@ -38,10 +41,35 @@ export function BasketPage(){
     if(status === 'loading') return <Typography>Loading....</Typography>
     if(!basket) return <Typography>Basket is empty</Typography>
 
-   
-
+    
     return (
-        <>
+    <Box>
+    {isSmallScreen ? (
+        basket.items.map((item) => (
+          <Card key={item.productId} sx={{marginBottom:1}}>
+            <CardContent>
+              <Box display="flex" alignItems="center">
+                <img src={item.pictureUrl} alt={item.name} style={{ height: 50, marginRight: 20 }} />
+                <Typography variant="body2">{item.name}</Typography>
+              </Box>
+              <Typography variant="body2">Price: ${ccyFormat(item.price / 100)}</Typography>
+                <IconButton color="error" 
+                    onClick={() => dispatch(addBasketItemsAsync({ productId: item.productId, quantity: 1 }))}
+                    sx={{}}
+                >
+                    <Add />
+                </IconButton>
+                {item.quantity}
+                <IconButton color="error" onClick={() => dispatch(deleteBasketItemsAsync({ productId: item.productId, quantity: 1 }))}>
+                    <Remove />
+                </IconButton> 
+              <Typography variant="body2">
+                Subtotal: ${ccyFormat((item.price / 100) * item.quantity)}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))
+      ) : (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="spanning table">
                 <TableHead>
@@ -85,7 +113,9 @@ export function BasketPage(){
                 </TableBody>
             </Table>
         </TableContainer>
-        <Grid container>
+      )}
+    
+    <Grid container sx={{marginBottom:2}}>
             <Grid item xs={12} sm={6}></Grid>
             <Grid item xs={12} sm={6}>
                     <TableContainer component={Paper}>
@@ -125,10 +155,8 @@ export function BasketPage(){
                     </Button>
             </Grid>
         </Grid>
-        
 
-
-        </>
-        
-    )
+    </Box>    
+    )    
+    
 }
