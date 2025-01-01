@@ -3,7 +3,7 @@ import MuiCard from '@mui/material/Card';
 import { useSelector } from "react-redux";
 import { AppState } from "../../app/store/configureStore";
 import CheckoutItem from "./CheckoutItem";
-import OrderSummaryCard from "./OrderSummaryCardContent";
+import OrderSummaryCard from "./OrderSummaryCard";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -50,7 +50,7 @@ export default function CheckoutPage(){
                 margin: "0 auto", // Center the grid layout
             }}
         >
-            <Grid xs={12} sm={12} md={9} lg={9} order={{ xs: 2, md: 1 }}>
+            <Grid xs={12} sm={9} order={{ xs: 2, sm: 1 }}>
                 <Card
                     sx={{
                         display: "flex",
@@ -122,13 +122,14 @@ export default function CheckoutPage(){
                 </Card>
             </Grid>
             
-            <Grid xs={12} sm={12} md={3} lg={3} order={{ xs: 1, md: 2 }}>
+            <Grid xs={12} sm={3} order={{ xs: 1, sm: 2 }}>
                 <Card
                     sx={{
                         display: "flex",
                         marginLeft: isSmallScreen ? 0 : 2, // Conditional margin
                         marginRight: isSmallScreen ? 2 : 0, // Conditional margin
-                        marginBottom:2
+                        marginBottom:2,
+                        maxWidth: isSmallScreen ? "100%" : "none", // Ensure proper width in smaller screens
                     }}
                 >
                     <CardContent>
